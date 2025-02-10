@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createProduct } from "@/services/productService";
-import { getClients } from "@/services/clientService";
+import { createProduct } from "/services/productService";
+import { getClients } from "/services/clientService";
 import { Container, Typography, TextField, Button, Box, MenuItem, Select, FormControl, InputLabel, CircularProgress } from "@mui/material";
 
 const NewProduct = () => {
@@ -94,7 +94,7 @@ const NewProduct = () => {
         </FormControl>
 
         <Box display="flex" justifyContent="space-between">
-          <Button onClick={() => router.push("/products")} variant="outlined" color="secondary">
+          <Button onClick={() => router.push("/app/products")} variant="outlined" color="secondary">
             Zpět
           </Button>
           <Button type="submit" variant="contained" color="primary" disabled={loading}>

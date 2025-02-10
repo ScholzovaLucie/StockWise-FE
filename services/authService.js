@@ -1,3 +1,4 @@
+// authService.js
 import api from "./apiClient";
 
 export const loginUser = async (email, password) => {
@@ -8,7 +9,7 @@ export const loginUser = async (email, password) => {
       { withCredentials: true }
     );
     console.log("Uživatel úspěšně přihlášen:", response.data);
-    return fetchCurrentUser();
+    return response.data;
   } catch (error) {
     console.error("Chyba při přihlašování:", error);
     throw new Error("Přihlášení se nezdařilo.");
@@ -21,7 +22,7 @@ export const registerUser = async (userData) => {
       withCredentials: true,
     });
     console.log("Uživatel úspěšně zaregistrován:", response.data);
-    return loginUser(userData.email, userData.password);
+    return response.data;
   } catch (error) {
     console.error("Chyba při registraci:", error);
     throw new Error("Registrace se nezdařila.");
@@ -35,7 +36,7 @@ export const fetchCurrentUser = async () => {
   } catch (error) {
     if (error.response?.status === 401) {
       console.log("Token je neplatný nebo uživatel není přihlášen.");
-      return null; // ✅ Nevoláme znovu fetchCurrentUser
+      return null;
     }
     throw error;
   }

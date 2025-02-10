@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getProducts } from "@/services/productService";
+import { getProducts } from "/services/productService";
 import { DataGrid } from "@mui/x-data-grid";
 import { TextField, Box, Typography, CircularProgress, Container, IconButton, Button } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility"; // 👀 Importujeme ikonu
@@ -37,7 +37,7 @@ const Products = () => {
       <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={() => router.push("/products/new")}
+          onClick={() => router.push("/app/products/new")}
         >
           Nový produkt
         </Button>
@@ -65,7 +65,7 @@ const Products = () => {
           headerName: "Akce",
           width: 100,
           renderCell: (params) => (
-            <IconButton onClick={() => router.push(`/products/${params.row.id}`)} color="primary">
+            <IconButton onClick={() => router.push(`/app/products/${params.row.id}`)} color="primary">
               <VisibilityIcon />
             </IconButton>
           ),

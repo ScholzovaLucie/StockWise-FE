@@ -2,18 +2,12 @@
 
 import { Stack, Typography, Button } from "@mui/material";
 
-function IndexPage() {
+export default function IndexPage() {
   return (
-    <Stack
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      spacing={4}
-    >
+    <Stack direction="column" alignItems="center" justifyContent="center" spacing={4}>
       <Typography variant="h3" fontWeight="bold" color="primary" sx={{ letterSpacing: 2 }}>
         StockWise
       </Typography>
-
       <Stack direction="row" spacing={2}>
         <Button href="/auth" variant="contained" color="primary" size="large">
           Přihlášení
@@ -22,5 +16,3 @@ function IndexPage() {
     </Stack>
   );
 }
-
-export default IndexPage;

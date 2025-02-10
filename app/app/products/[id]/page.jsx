@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getProductById, updateProduct } from "@/services/productService";
-import { getClientById, getClients } from "@/services/clientService";
-import { Product, Client } from "@/models/types"; // ✅ Importujeme modely
+import { getProductById, updateProduct } from "/services/productService";
+import { getClientById, getClients } from "/services/clientService";
+import { Product, Client } from "/models/types"; // ✅ Importujeme modely
 import {
   Container,
   Typography,
