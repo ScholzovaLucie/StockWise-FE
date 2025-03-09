@@ -1,108 +1,60 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { createProduct } from "/services/productService";
-import { getClients } from "/services/clientService";
-import { Container, Typography, TextField, Button, Box, MenuItem, Select, FormControl, InputLabel, CircularProgress } from "@mui/material";
+import productService from "/services/productService";
+import clientService from "/services/clientService";
+import NewEntityForm from "/components/newEntityForm";
+import { useEffect, useState } from "react";
 
 const NewProduct = () => {
-  const router = useRouter();
-  const [sku, setSku] = useState("");
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [clientId, setClientId] = useState("");
-  const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [clientId, setClientId] = useState(null);
+  const [selectFields, setSelectFields] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const fields = [
+    { name: "sku", label: "SKU", type: "text" },
+    { name: "name", label: "Název", type: "text" },
+    { name: "description", label: "Popis", multiline: true, minRows: 3, type: "text" },
+  ];
 
   useEffect(() => {
-    const fetchClients = async () => {
+    const loadProducts = async () => {
       try {
-        const data = await getClients();
-        setClients(data.results);
+        setIsLoading(true);
+        const clients = await clientService.getAll(clientId); // Předpokládám, že tato funkce vrací seznam produktů
+        const options = clients.map((client) => ({
+          id: client.id,
+          name: client.name, // Zde použij správné pole pro zobrazení názvu produktu
+        }));
+
+        setSelectFields([
+          {
+            name: "client_id",
+            label: "Client",
+            options: options,
+          },
+        ]);
       } catch (error) {
-        console.error("Chyba při načítání klientů:", error);
+        console.error("Error loading products:", error);
+      }finally {
+        setIsLoading(false);
       }
     };
-    fetchClients();
+
+    loadProducts();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  if (isLoading || !selectFields) {
+    return <p>Načítání...</p>; // Spinner můžeš přidat podle potřeby
+  }
 
-    try {
-      await createProduct({ sku: sku, name: name, description: description, client_id: clientId });
-      router.push("/products");
-    } catch (error) {
-      console.error("Chyba při vytváření produktu:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
-    <Container maxWidth="sm">
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        Nový produkt
-      </Typography>
-
-      <form onSubmit={handleSubmit}>
-        <TextField
-          fullWidth
-          label="SKU"
-          variant="outlined"
-          value={sku}
-          onChange={(e) => setSku(e.target.value)}
-          sx={{ mb: 2 }}
-        />
-
-        <TextField
-          fullWidth
-          label="Název"
-          variant="outlined"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          sx={{ mb: 2 }}
-        />
-
-        <TextField
-          fullWidth
-          label="Popis"
-          variant="outlined"
-          multiline
-          minRows={3}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          sx={{ mb: 2 }}
-        />
-
-        {/* ✅ Výběr klienta */}
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel id="client-label">Klient</InputLabel>
-          <Select
-            labelId="client-label"
-            value={clientId}
-            onChange={(e) => setClientId(e.target.value)}
-          >
-            {clients.map((client) => (
-              <MenuItem key={client.id} value={client.id}>
-                {client.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <Box display="flex" justifyContent="space-between">
-          <Button onClick={() => router.push("/app/products")} variant="outlined" color="secondary">
-            Zpět
-          </Button>
-          <Button type="submit" variant="contained" color="primary" disabled={loading}>
-            {loading ? <CircularProgress size={24} color="inherit" /> : "Vytvořit"}
-          </Button>
-        </Box>
-      </form>
-    </Container>
+      <NewEntityForm
+      title="Nový produkt"
+      fields={fields}
+      service={productService}
+      selectFields={selectFields}
+      redirectPath="/app/products"
+    />
   );
 };
 

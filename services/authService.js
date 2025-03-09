@@ -1,18 +1,22 @@
 // authService.js
 import api from "./apiClient";
+import Cookies from "js-cookie";
 
 export const loginUser = async (email, password) => {
   try {
     const response = await api.post(
       "/auth/login/",
       { email, password },
-      { withCredentials: true }
+      { withCredentials: true } // Posílá cookies z backendu
     );
-    console.log("Uživatel úspěšně přihlášen:", response.data);
+
+    if (response.data.access_token) {
+      localStorage.setItem("access_token", response.data.access_token);
+    }
+
     return response.data;
   } catch (error) {
-    console.error("Chyba při přihlašování:", error);
-    throw new Error("Přihlášení se nezdařilo.");
+    throw new Error(error.response?.data?.error || "Přihlášení se nezdařilo.");
   }
 };
 
@@ -21,11 +25,9 @@ export const registerUser = async (userData) => {
     const response = await api.post("/auth/register/", userData, {
       withCredentials: true,
     });
-    console.log("Uživatel úspěšně zaregistrován:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Chyba při registraci:", error);
-    throw new Error("Registrace se nezdařila.");
+    throw new Error(error.response?.data?.error || "Registrace se nezdařila.");
   }
 };
 
@@ -34,11 +36,7 @@ export const fetchCurrentUser = async () => {
     const response = await api.get("/auth/me/", { withCredentials: true });
     return response.data;
   } catch (error) {
-    if (error.response?.status === 401) {
-      console.log("Token je neplatný nebo uživatel není přihlášen.");
-      return null;
-    }
-    throw error;
+    return null;
   }
 };
 
@@ -49,20 +47,34 @@ export const refreshAccessToken = async () => {
       {},
       { withCredentials: true }
     );
-    console.log("Token obnoven:", response.data);
     return response.data.access_token;
   } catch (error) {
-    console.error("Chyba při obnovování tokenu:", error);
     return null;
   }
 };
 
 export const logout = async () => {
   try {
+    Cookies.remove("access_token");
+    Cookies.remove("refresh_token");
     await api.post("/auth/logout/", {}, { withCredentials: true });
-    console.log("Uživatel odhlášen.");
+  } catch (error) {}
+  window.location.href = "/auth/login";
+};
+
+export const changePassword = async (
+  old_password,
+  new_password,
+  confirm_password
+) => {
+  try {
+    const response = await api.post("/auth/change-password/", {
+      old_password,
+      new_password,
+      confirm_password,
+    });
+    return response.data;
   } catch (error) {
-    console.error("Chyba při odhlašování:", error);
+    throw new Error("Změna hesla se zetdařila.");
   }
-  window.location.href = "/auth";
 };

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { loginUser, registerUser } from "../../services/authService";
-import { useAuth } from "../../hooks/useAuth";
+import { registerUser } from "/services/authService";
+import { useAuth } from "/context/authContext";
 import { useRouter } from "next/navigation";
 import { TextField, Button, Container, Typography, Box, Card, CardContent, CircularProgress } from "@mui/material";
 
@@ -11,7 +11,7 @@ export default function AuthPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLogin, setIsLogin] = useState(true);
+  const [passwordAgain, setPasswordAgain] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -20,16 +20,12 @@ export default function AuthPage() {
     setLoading(true);
     setError("");
 
-    console.log("login")
-
     try {
-      const userData = isLogin
-        ? await loginUser(email, password)
-        : await registerUser({ email, password });
-      setUser(userData);
-      router.replace("/app/dashboard");
+      const userData = await registerUser(email, password);
+      setUser(userData.user);
+      router.push("/app/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Nastala neočekávaná chyba.");
+      setError(err?.message || "Nastala neočekávaná chyba.");
     } finally {
       setLoading(false);
     }
@@ -41,21 +37,18 @@ export default function AuthPage() {
         <Card sx={{ width: "100%", maxWidth: 400, p: 3, boxShadow: 3 }}>
           <CardContent>
             <Typography variant="h5" align="center" gutterBottom>
-              {isLogin ? "Přihlášení" : "Registrace"}
+              Rwgistrace
             </Typography>
             {error && <Typography color="error" align="center" sx={{ mb: 2 }}>{error}</Typography>}
-            <form onSubmit={handleSubmit}>
               <TextField fullWidth label="Email" type="email" margin="normal" value={email} onChange={(e) => setEmail(e.target.value)} />
               <TextField fullWidth label="Heslo" type="password" margin="normal" value={password} onChange={(e) => setPassword(e.target.value)} />
-              <Box sx={{ position: "relative", mt: 2 }}>
-                <Button fullWidth type="submit" variant="contained" color="primary" disabled={loading}>
-                  {loading ? <CircularProgress size={24} color="inherit" /> : isLogin ? "Přihlásit se" : "Registrovat"}
-                </Button>
-              </Box>
-              <Button fullWidth color="secondary" sx={{ mt: 1 }} onClick={() => setIsLogin(!isLogin)}>
-                {isLogin ? "Nemáte účet? Registrace" : "Máte účet? Přihlášení"}
+              <TextField fullWidth label="Heslo znovu" type="password" margin="normal" value={passwordAgain} onChange={(e) => setPasswordAgain(e.target.value)} />
+              <Button fullWidth type="submit" variant="contained" color="primary" disabled={loading} onClick={handleSubmit}>
+                {loading ? <CircularProgress size={24} color="inherit" /> : "Registrace" }
               </Button>
-            </form>
+              <Button fullWidth variant="outlined" color="primary" sx={{ mt: 1 }} onClick={() => router.push("/auth/login")}>
+                Již máte účet? Přihlašte se
+              </Button>
           </CardContent>
         </Card>
       </Box>

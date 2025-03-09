@@ -1,84 +1,67 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { getProducts } from "/services/productService";
-import { DataGrid } from "@mui/x-data-grid";
-import { TextField, Box, Typography, CircularProgress, Container, IconButton, Button } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility"; // 👀 Importujeme ikonu
-import AddIcon from "@mui/icons-material/Add";
+import productService from "/services/productService";
+import EntityList from "/components/entityList";
+import { Button, Tooltip } from "@mui/material";
+import { useRouter , useSearchParams} from "next/navigation";
+
 
 const Products = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
   const router = useRouter();
-
-  useEffect(() => {
-    const loadProducts = async () => {
-      setLoading(true);
-      try {
-        const data = await getProducts();
-        setProducts(data.results);
-      } catch (error) {
-        console.error("Chyba při načítání produktů:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadProducts();
-  }, []);
+  const searchParams = useSearchParams(); // Použití hooku pro získání query parametrů
+  const search = searchParams.get("search");
+  
+  const columns = [
+    { field: "sku", headerName: "SKU", width: 120 },
+    { field: "name", headerName: "Název", flex: 1 },
+    { field: "description", headerName: "Popis", flex: 1 },
+    { field: "amount", headerName: "Množství", width: 100,},
+    {
+      field: "groups",
+      headerName: "Skupiny",
+      width: 100,
+      renderCell: (params) => {
+        return(
+          <Tooltip title={params.row.groups.title}>
+        <Button
+          onClick={() => {
+            router.push(`/app/groups?search=${params.row.groups.search}`)}}
+          color="primary"
+        >
+          {params.row.groups.count}
+        </Button>
+        </Tooltip>
+      )},
+    },
+    {
+      field: "batches",
+      headerName: "Šarže",
+      width: 100,
+      renderCell: (params) => {
+        return(
+          <Tooltip title={params.row.batches.search}>
+        <Button
+          onClick={() => {
+            router.push(`/app/batches?search=${params.row.batches.search}`)}}
+          color="primary"
+        >
+          {params.row.batches.count}
+        </Button>
+        </Tooltip>
+      )},
+    },
+  ];
 
   return (
-    <Container>
-      <Typography variant="h4" sx={{ mb: 2 }}>
-        Skladové položky
-      </Typography>
-      <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => router.push("/app/products/new")}
-        >
-          Nový produkt
-        </Button>
-      <TextField
-        label="Hledat produkt"
-        variant="outlined"
-        fullWidth
-        sx={{ mb: 2 }}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-      {loading ? (
-  <CircularProgress />
-) : products.length > 0 ? (
-  <Box sx={{ height: 500, width: "100%" }}>
-    <DataGrid
-      rows={products}
-      columns={[
-        { field: "sku", headerName: "SKU", width: 120 },
-        { field: "name", headerName: "Název", flex: 1 },
-        { field: "description", headerName: "Popis", flex: 1 },
-        { field: "amount", headerName: "Množství", flex: 1 },
-        {
-          field: "actions",
-          headerName: "Akce",
-          width: 100,
-          renderCell: (params) => (
-            <IconButton onClick={() => router.push(`/app/products/${params.row.id}`)} color="primary">
-              <VisibilityIcon />
-            </IconButton>
-          ),
-        },
-      ]}
+    <EntityList
+      title="Skladové položky"
+      service={productService}
+      columns={columns}
+      searchData={search}
+      addPath="/app/products/new"
+      viewPath="/app/products"
+      entityName="produkt"
     />
-  </Box>
-) : (
-  <Typography variant="body1" sx={{ mt: 2 }}>
-    Žádné produkty nebyly nalezeny.
-  </Typography>
-)}
-    </Container>
   );
 };
 

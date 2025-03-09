@@ -3,25 +3,26 @@ import { createTheme } from "@mui/material/styles";
 export const lightTheme = createTheme({
   palette: {
     mode: "light",
-    primary: { main: "#3A86FF", dark: "#1A66CC" },
-    secondary: { main: "#FFBE0B", dark: "#E99600" },
-    background: { default: "#F4F4F4", paper: "#E0E0E0" },
-    text: { primary: "#323232", secondary: "#40444B" },
-    success: { main: "#06D6A0" },
-    warning: { main: "#FFD166" },
-    error: { main: "#EF476F" },
+    primary: { main: "#f89371", dark: "#f89371" }, // Tlumená šedozelená
+    secondary: { main: "#3f322e", dark: "#BC6C25" }, // Přírodní béžová s teplým podtónem
+    background: { default: "#fcdbba", paper: "#fef5eb" }, // Teplá bílá s jemným šedým podtónem
+    text: { primary: "#2F2F2F", secondary: "#5A5A5A" }, // Uhlově černá pro výbornou čitelnost
+    success: { main: "#40916C" }, // Moderní tlumená zelená
+    warning: { main: "#F4A261" }, // Světlejší oranžová
+    error: { main: "#D72638" }, // Mírně tmavší červená
   },
 });
 
 export const darkTheme = createTheme({
   palette: {
     mode: "dark",
-    primary: { main: "#1A66CC" },
-    secondary: { main: "#E99600" },
-    background: { default: "#202225", paper: "#40444B" },
-    text: { primary: "#D1D1D1", secondary: "#A0A0A0" },
-    success: { main: "#06D6A0" },
-    warning: { main: "#FFD166" },
-    error: { main: "#EF476F" },
+    primary: { main: "#f89371", dark: "#f89371" },
+    secondary: { main: "#fcc9b8", dark: "#f89371" },
+    background: { default: "#1E1E24", paper: "#2C2C34" },
+    text: { primary: "#E4E4E4", secondary: "#BEBEBE" },
+    iconColor: "#F4D35E", // Jasná žlutá pro zvýraznění ikon
+    success: { main: "#80ED99" },
+    warning: { main: "#F4D35E" },
+    error: { main: "#EF233C" },
   },
 });

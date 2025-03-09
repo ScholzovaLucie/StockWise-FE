@@ -1,34 +1,25 @@
-import apiClient from "./apiClient";
+import createCRUDService from "./CRUDService";
+import api from "./apiClient";
 
-/**
- * Načíst všechny produkty
- * @returns {Promise<Product[]>} - Seznam produktů
- */
-export const getProducts = async () => {
-  const response = await apiClient.get("/products/", { withCredentials: true });
-  return /** @type {Product[]} */ (response.data);
+const productService = {
+  ...createCRUDService("products"),
+
+  getProductsByClient: async (clientId) => {
+    try {
+      const response = await api.get("/products/", {
+        params: { client: clientId },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Chyba při načítání produktů pro klienta:", error);
+      throw new Error("Nepodařilo se načíst produkty pro vybraného klienta.");
+    }
+  },
+
+  getProductStock: async (productId) => {
+    const response = await api.get(`/products/${productId}/stock/`);
+    return response.data;
+  },
 };
 
-/**
- * Načíst jeden produkt podle ID
- * @param {string} id - ID produktu
- * @returns {Promise<Product>} - Data produktu
- */
-export const getProductById = async (id) => {
-  const response = await apiClient.get(`/products/${id}/`, {
-    withCredentials: true,
-  });
-  return /** @type {Product} */ (response.data);
-};
-
-/**
- * Vytvořit nový produkt
- * @param {Partial<Product>} productData - Data pro nový produkt
- * @returns {Promise<Product>} - Vytvořený produkt
- */
-export const createProduct = async (productData) => {
-  const response = await apiClient.post("/products/", productData, {
-    withCredentials: true,
-  });
-  return /** @type {Product} */ (response.data);
-};
+export default productService;
