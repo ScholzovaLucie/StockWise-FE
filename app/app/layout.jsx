@@ -9,7 +9,7 @@ import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import UserSection from "/components/UserSection";
 import { usePathname, useRouter } from "next/navigation";
 import { ClientProvider } from "/context/clientContext"; // Import ClientProvider
-import { MessageProvider, useMessage } from "/context/messageContext"; 
+import { MessageProvider, useMessage } from "/context/messageContext";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
 import PersonSearchRoundedIcon from "@mui/icons-material/PersonSearchRounded";
@@ -22,21 +22,62 @@ import WarehouseIcon from "@mui/icons-material/Warehouse";
 import LoopIcon from "@mui/icons-material/Loop";
 import LayoutWrapper from "./LayoutWrapper";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
+import RouteTracker from "/context/routerTracker";
 
 const NAVIGATION = [
-  { segment: "app/dashboard", title: "Dashboard", icon: <DashboardRoundedIcon color="primary" /> },
-  { segment: "app/chatbot", title: "Chat", icon: <SmartToyIcon color="primary" /> },
-  { segment: "app/clients", title: "Klienti", icon: <PersonSearchRoundedIcon color="primary" /> },
+  {
+    segment: "app/dashboard",
+    title: "Dashboard",
+    icon: <DashboardRoundedIcon color="primary" />,
+  },
+  {
+    segment: "app/chatbot",
+    title: "Chat",
+    icon: <SmartToyIcon color="primary" />,
+  },
+  {
+    segment: "app/clients",
+    title: "Klienti",
+    icon: <PersonSearchRoundedIcon color="primary" />,
+  },
   { kind: "divider" },
-  { segment: "app/products", title: "Položka", icon: <LocalGroceryStoreIcon color="primary" /> },
-  { segment: "app/batches", title: "Šarže", icon: <BatchPredictionRoundedIcon color="primary" /> },
+  {
+    segment: "app/products",
+    title: "Položka",
+    icon: <LocalGroceryStoreIcon color="primary" />,
+  },
+  {
+    segment: "app/batches",
+    title: "Šarže",
+    icon: <BatchPredictionRoundedIcon color="primary" />,
+  },
   { kind: "divider" },
-  { segment: "app/boxes", title: "Krabice", icon: <Inventory2RoundedIcon color="primary" /> },
-  { segment: "app/groups", title: "Skupina", icon: <WorkspacesIcon color="primary" /> },
-  { segment: "app/operations", title: "Operace", icon: <LoopIcon color="primary" /> },
+  {
+    segment: "app/boxes",
+    title: "Krabice",
+    icon: <Inventory2RoundedIcon color="primary" />,
+  },
+  {
+    segment: "app/groups",
+    title: "Skupina",
+    icon: <WorkspacesIcon color="primary" />,
+  },
+  {
+    segment: "app/operations",
+    title: "Operace",
+    icon: <LoopIcon color="primary" />,
+  },
   { kind: "divider" },
-  { segment: "app/positions", title: "Pozice", icon: <PlaceIcon color="primary" /> },
-  { segment: "app/warehouse", title: "Sklad", icon: <WarehouseIcon color="primary" /> },
+  {
+    segment: "app/positions",
+    title: "Pozice",
+    icon: <PlaceIcon color="primary" />,
+  },
+  {
+    segment: "app/warehouse",
+    title: "Sklad",
+    icon: <WarehouseIcon color="primary" />,
+  },
 ];
 
 export default function AppLayout({ children }) {
@@ -44,11 +85,15 @@ export default function AppLayout({ children }) {
   const router = useRouter();
   const [mode, setMode] = useState("light");
 
-  const theme = useMemo(() => (mode === "light" ? lightTheme : darkTheme), [mode]);
+  const theme = useMemo(
+    () => (mode === "light" ? lightTheme : darkTheme),
+    [mode]
+  );
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <RouteTracker />
       <ClientProvider>
         <MessageProvider>
           <AppProvider
@@ -68,9 +113,7 @@ export default function AppLayout({ children }) {
                 ),
               }}
             >
-              <LayoutWrapper>
-                {children}
-              </LayoutWrapper>
+              <LayoutWrapper>{children}</LayoutWrapper>
               <MessageSnackbar />
             </DashboardLayout>
           </AppProvider>
@@ -84,11 +127,11 @@ function MessageSnackbar() {
   const { message, setMessage } = useMessage();
 
   return (
-    <Snackbar 
-      open={!!message} 
-      onClose={() => setMessage(null)} 
-      message={message} 
-      autoHideDuration={3000} 
+    <Snackbar
+      open={!!message}
+      onClose={() => setMessage(null)}
+      message={message}
+      autoHideDuration={3000}
     />
   );
 }

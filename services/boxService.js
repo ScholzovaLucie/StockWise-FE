@@ -1,11 +1,12 @@
+import api from "./apiClient";
 import createCRUDService from "./CRUDService";
 
 const boxService = {
-  ...createCRUDService("box"),
+  ...createCRUDService("boxes"),
 
   getProductsInBox: async (boxId) => {
     try {
-      const response = await apiClient.get(`/boxes/${boxId}/products/`, {
+      const response = await api.get(`/boxes/${boxId}/products/`, {
         withCredentials: true,
       });
       return response.data;

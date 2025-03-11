@@ -4,7 +4,16 @@ import { useState } from "react";
 import { registerUser } from "/services/authService";
 import { useAuth } from "/context/authContext";
 import { useRouter } from "next/navigation";
-import { TextField, Button, Container, Typography, Box, Card, CardContent, CircularProgress } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+  CircularProgress,
+} from "@mui/material";
 
 export default function AuthPage() {
   const { setUser } = useAuth();
@@ -23,6 +32,7 @@ export default function AuthPage() {
     try {
       const userData = await registerUser(email, password);
       setUser(userData.user);
+      localStorage.removeItem("lastVisitedUrl");
       router.push("/app/dashboard");
     } catch (err) {
       setError(err?.message || "Nastala neočekávaná chyba.");
@@ -33,22 +43,71 @@ export default function AuthPage() {
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         <Card sx={{ width: "100%", maxWidth: 400, p: 3, boxShadow: 3 }}>
           <CardContent>
             <Typography variant="h5" align="center" gutterBottom>
               Rwgistrace
             </Typography>
-            {error && <Typography color="error" align="center" sx={{ mb: 2 }}>{error}</Typography>}
-              <TextField fullWidth label="Email" type="email" margin="normal" value={email} onChange={(e) => setEmail(e.target.value)} />
-              <TextField fullWidth label="Heslo" type="password" margin="normal" value={password} onChange={(e) => setPassword(e.target.value)} />
-              <TextField fullWidth label="Heslo znovu" type="password" margin="normal" value={passwordAgain} onChange={(e) => setPasswordAgain(e.target.value)} />
-              <Button fullWidth type="submit" variant="contained" color="primary" disabled={loading} onClick={handleSubmit}>
-                {loading ? <CircularProgress size={24} color="inherit" /> : "Registrace" }
-              </Button>
-              <Button fullWidth variant="outlined" color="primary" sx={{ mt: 1 }} onClick={() => router.push("/auth/login")}>
-                Již máte účet? Přihlašte se
-              </Button>
+            {error && (
+              <Typography color="error" align="center" sx={{ mb: 2 }}>
+                {error}
+              </Typography>
+            )}
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              margin="normal"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              fullWidth
+              label="Heslo"
+              type="password"
+              margin="normal"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <TextField
+              fullWidth
+              label="Heslo znovu"
+              type="password"
+              margin="normal"
+              value={passwordAgain}
+              onChange={(e) => setPasswordAgain(e.target.value)}
+            />
+            <Button
+              fullWidth
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={loading}
+              onClick={handleSubmit}
+            >
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Registrace"
+              )}
+            </Button>
+            <Button
+              fullWidth
+              variant="outlined"
+              color="primary"
+              sx={{ mt: 1 }}
+              onClick={() => router.push("/auth/login")}
+            >
+              Již máte účet? Přihlašte se
+            </Button>
           </CardContent>
         </Card>
       </Box>

@@ -20,7 +20,7 @@ import {
   Button,
   Box,
   Typography,
-  IconButton
+  IconButton,
 } from "@mui/material";
 import { useMessage } from "/context/messageContext";
 
@@ -38,7 +38,6 @@ const PackingPage = () => {
   const [productSummary, setProductSummary] = useState([]);
   const [availableBoxes, setAvailableBoxes] = useState([]); // 📦 Seznam všech dostupných krabic
 
-
   useEffect(() => {
     const fetchOperation = async () => {
       try {
@@ -53,7 +52,7 @@ const PackingPage = () => {
 
     const start = async () => {
       try {
-        await startPackaging(id);
+        await operationService.startPackaging(id);
       } catch (error) {
         setMessage(error?.message || "Nepodařilo se zahájit ablení.");
       } finally {
@@ -100,30 +99,29 @@ const PackingPage = () => {
     fetchProductsInBox();
   }, [selectedBox]);
 
-
   useEffect(() => {
     if (!productSummary) return;
     const products = productSummary.filter((product) =>
       product.name.toLowerCase().includes(searchCode.toLowerCase())
     );
-    if (products.length == 1){
+    if (products.length == 1) {
       setQuantityToAdd(products[0].total_quantity - products[0].rescanned);
       setSelectedProduct(products[0]);
     }
-
   }, [searchCode]);
 
   const handleRemoveFromBox = async (groupId) => {
     try {
       await removeFromBox(groupId);
       alert("Produkt odebrán z krabice!");
-  
+
       // Aktualizace seznamu produktů v krabici
       const updatedProducts = await boxService.getProductsInBox(selectedBox);
       setProductsInBox(updatedProducts);
-  
+
       // Aktualizace souhrnu produktů
-      const updatedProductSummary = await operationService.getOperationProductSummary(id);
+      const updatedProductSummary =
+        await operationService.getOperationProductSummary(id);
       setProductSummary(updatedProductSummary);
     } catch (error) {
       setMessage(error.message);
@@ -137,23 +135,33 @@ const PackingPage = () => {
       return;
     }
     const productId = selectedProduct.id;
-    const totalAvailable = productSummary.find((p) => p.id === productId)?.total_quantity;
+    const totalAvailable = productSummary.find(
+      (p) => p.id === productId
+    )?.total_quantity;
 
     if (quantityToAdd > totalAvailable) {
-      setMessage(`Nelze přidat ${quantityToAdd} ks, k dispozici je pouze ${totalAvailable} ks.`);
+      setMessage(
+        `Nelze přidat ${quantityToAdd} ks, k dispozici je pouze ${totalAvailable} ks.`
+      );
       return;
     }
 
     try {
-      await addToBox(id, selectedBox, productId, quantityToAdd);
+      await operationService.addToBox(
+        id,
+        selectedBox,
+        productId,
+        quantityToAdd
+      );
       setMessage("Produkt přidán do krabice!");
 
       // Aktualizace seznamu produktů v krabici
       const updatedProducts = await boxService.getProductsInBox(selectedBox);
       setProductsInBox(updatedProducts);
-      const updatedProductSummary = await operationService.getOperationProductSummary(id);
+      const updatedProductSummary =
+        await operationService.getOperationProductSummary(id);
       setProductSummary(updatedProductSummary);
-  
+
       setSearchCode("");
       setSelectedProduct();
       setQuantityToAdd(0);
@@ -167,7 +175,7 @@ const PackingPage = () => {
     try {
       await operationService.completeOperation(id);
       setMessage("Operace úspěšně dokončena!");
-      router.push('/app/operations/')
+      router.push("/app/operations/");
     } catch (error) {
       setMessage(error.message);
     }
@@ -178,7 +186,9 @@ const PackingPage = () => {
 
   return (
     <Box sx={{ padding: 3 }}>
-      <Typography variant="h4" gutterBottom>Balení operace {operation.number}</Typography>
+      <Typography variant="h4" gutterBottom>
+        Balení operace {operation.number}
+      </Typography>
 
       {/* 📋 Seznam všech produktů */}
       <Typography variant="h5">Seznam produktů</Typography>
@@ -194,7 +204,8 @@ const PackingPage = () => {
           </TableHead>
           <TableBody>
             {productSummary.map((product) => {
-              const completionPercentage = (product.rescanned / product.total_quantity) * 100;
+              const completionPercentage =
+                (product.rescanned / product.total_quantity) * 100;
 
               return (
                 <TableRow
@@ -207,7 +218,9 @@ const PackingPage = () => {
                   <TableCell>{product.name}</TableCell>
                   <TableCell>{product.total_quantity}</TableCell>
                   <TableCell>{product.rescanned}</TableCell>
-                  <TableCell>{product.total_quantity - product.rescanned}</TableCell>
+                  <TableCell>
+                    {product.total_quantity - product.rescanned}
+                  </TableCell>
                 </TableRow>
               );
             })}
@@ -216,7 +229,11 @@ const PackingPage = () => {
       </TableContainer>
 
       {/* 📋 Výběr krabice */}
-      <Select fullWidth value={selectedBox} onChange={(e) => setSelectedBox(e.target.value)}>
+      <Select
+        fullWidth
+        value={selectedBox}
+        onChange={(e) => setSelectedBox(e.target.value)}
+      >
         <MenuItem value="">-- Vyberte krabici --</MenuItem>
         {availableBoxes.map((box) => (
           <MenuItem key={box.id} value={box.id}>
@@ -275,12 +292,21 @@ const PackingPage = () => {
           onChange={(e) => setQuantityToAdd(e.target.value)}
           sx={{ maxWidth: 120 }}
         />
-        <Button variant="contained" onClick={handleAddToBox}>Přidat</Button>
+        <Button variant="contained" onClick={handleAddToBox}>
+          Přidat
+        </Button>
       </Box>
 
       {/* ✅ Dokončení operace */}
-      {productSummary.every((product) => product.total_quantity === product.rescanned) && (
-        <Button variant="contained" color="success" sx={{ marginTop: 2 }} onClick={handleCompleteOperation}>
+      {productSummary.every(
+        (product) => product.total_quantity === product.rescanned
+      ) && (
+        <Button
+          variant="contained"
+          color="success"
+          sx={{ marginTop: 2 }}
+          onClick={handleCompleteOperation}
+        >
           Dokončit operaci
         </Button>
       )}

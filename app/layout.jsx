@@ -16,10 +16,10 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <AuthProvider>
-        <ThemeProvider theme={lightTheme}>
-        <CssBaseline />
+          <ThemeProvider theme={lightTheme}>
+            <CssBaseline />
             {children}
-            </ThemeProvider>
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

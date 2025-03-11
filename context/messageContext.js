@@ -9,7 +9,7 @@ export const MessageProvider = ({ children }) => {
 
   useEffect(() => {
     if (message) {
-      const timer = setTimeout(() => setMessage(null), 3000);
+      const timer = setTimeout(() => setMessage(null), 4000);
       return () => clearTimeout(timer);
     }
   }, [message]);

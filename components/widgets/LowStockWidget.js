@@ -38,7 +38,6 @@ const LowStockWidget = () => {
               justifyContent: "space-between",
               gap: 0.5,
               p: 1,
-              backgroundColor: "#fff5f5",
               borderRadius: 2,
               boxShadow: 1,
               cursor: "pointer",

@@ -1,12 +1,12 @@
 import createCRUDService from "./CRUDService";
-import api from "./apiClient";
+import apiClient from "./apiClient";
 
 const operationService = {
   ...createCRUDService("operations"),
 
   getStatuses: async () => {
     try {
-      const response = await api.get("/operations/statuses");
+      const response = await apiClient.get("/operations/statuses");
       return response.data;
     } catch (error) {
       throw new Error(
@@ -44,14 +44,12 @@ const operationService = {
   getOperationProductSummary: async (operationId) => {
     try {
       const response = await apiClient.get(
-        `/operations/${operationId}/product_summary/`,
-        { withCredentials: true }
+        `/operations/${operationId}/product_summary/`
       );
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.error ||
-          "Chyba při načítání produktového souhrnu."
+        error.response?.data?.error || "Chyba při dokončení operace."
       );
     }
   },
@@ -94,6 +92,38 @@ const operationService = {
       }
     );
     return response.data;
+  },
+
+  addToBox: async (id, selectedBox, productId, quantityToAdd) => {
+    const response = await apiClient.post(
+      `/operations/${id}/add_to_box/`,
+      {
+        box_id: selectedBox,
+        product_id: productId,
+        quantity: quantityToAdd,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  },
+
+  createOperation: async (operationData) => {
+    try {
+      const response = await apiClient.post(
+        "/operations/create/",
+        operationData,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.error || "Chyba při vytváření operace."
+      );
+    }
   },
 };
 

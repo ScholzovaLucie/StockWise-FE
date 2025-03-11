@@ -1,45 +1,110 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TextField, Button, Box, Typography, Paper } from "@mui/material";
 import chatbotService from "/services/chatbotService";
+import { useClient } from "/context/clientContext";
+import { useMessage } from "/context/messageContext";
 
 const Chatbot = () => {
-  const [message, setMessage] = useState("");
+  const [chatMessage, setChatMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const { selectedClient } = useClient();
+  const { setMessage } = useMessage();
+
+  useEffect(() => {
+    if (!selectedClient) {
+      setMessage("Chyba: Není vybrán žádný klient.");
+      return;
+    }
+    loadChatHistory();
+  }, [selectedClient]);
+
+  const loadChatHistory = async () => {
+    if (!selectedClient) return;
+    try {
+      const history = await chatbotService.getHistory(selectedClient);
+      setMessages(history);
+    } catch (error) {
+      setMessage(error.message);
+    }
+  };
 
   const sendMessage = async () => {
-    if (!message) return;
+    if (!selectedClient) {
+      setMessage("Chyba: Není vybrán žádný klient.");
+      return;
+    }
+    if (!chatMessage) return;
 
-    const userMessage = { role: "user", content: message };
+    const userMessage = { role: "user", content: chatMessage };
     setMessages((prev) => [...prev, userMessage]);
-    setMessage(null);
+    setChatMessage("");
 
-    const botResponse = await chatbotService.sendMessage(message);
-    const botMessage = { role: "bot", content: botResponse };
+    try {
+      const botResponse = await chatbotService.sendMessage(chatMessage, selectedClient);
+      setMessages((prev) => [...prev, ...botResponse]);
+    } catch (error) {
+      setMessage(error.message);
+    }
+  };
 
-    setMessages((prev) => [...prev, botMessage]);
+  const resetChat = async () => {
+    if (!selectedClient) {
+      setMessage("Chyba: Není vybrán žádný klient.");
+      return;
+    }
+
+    try {
+      await chatbotService.resetChat(selectedClient);
+      setMessages([]);
+    } catch (error) {
+      setMessage(error.message);
+    }
   };
 
   return (
-    <Box sx={{ maxWidth: 400, mx: "auto", mt: 4 }}>
-      <Paper sx={{ p: 2, mb: 2 }}>
-        {messages.map((msg, index) => (
-          <Typography key={index} sx={{ textAlign: msg.role === "user" ? "right" : "left" }}>
-            {msg.role === "user" ? "🧑" : "🤖"} {msg.content}
-          </Typography>
-        ))}
-      </Paper>
-      <TextField
-        fullWidth
-        label="Zadejte zprávu"
-        variant="outlined"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
-      <Button sx={{ mt: 2 }} variant="contained" onClick={sendMessage}>
-        Odeslat
-      </Button>
+    <Box sx={{ maxWidth: 500, mx: "auto", mt: 4 }}>
+      {!selectedClient ? (
+        <Typography color="error" sx={{ textAlign: "center", mb: 2 }}>
+          Chyba: Není vybrán žádný klient. Vyberte klienta pro pokračování.
+        </Typography>
+      ) : (
+        <>
+          <Paper sx={{ p: 2, mb: 2, maxHeight: 300, overflowY: "auto" }}>
+            {messages.map((msg, index) => (
+              <Typography
+                key={index}
+                sx={{
+                  textAlign: msg.role === "user" ? "right" : "left",
+                  bgcolor: msg.role === "user" ? "lightblue" : "lightgray",
+                  p: 1,
+                  borderRadius: 1,
+                  mb: 1,
+                }}
+              >
+                {msg.role === "user" ? "🧑" : "🤖"} {msg.content}
+              </Typography>
+            ))}
+          </Paper>
+          <TextField
+            fullWidth
+            label="Zadejte zprávu"
+            variant="outlined"
+            value={chatMessage}
+            onChange={(e) => setChatMessage(e.target.value)}
+            disabled={!selectedClient}
+          />
+          <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
+            <Button variant="contained" onClick={sendMessage} disabled={!selectedClient}>
+              Odeslat
+            </Button>
+            <Button variant="outlined" color="error" onClick={resetChat} disabled={!selectedClient}>
+              Resetovat chat
+            </Button>
+          </Box>
+        </>
+      )}
     </Box>
   );
 };

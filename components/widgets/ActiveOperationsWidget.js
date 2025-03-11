@@ -9,8 +9,6 @@ const getStatusColor = (status) => {
   switch (status) {
     case "COMPLETED":
       return "#4caf50"; // Zelená
-    case "IN_PROGRESS":
-      return "#ff9800"; // Oranžová
     case "BOX":
       return "#ff9800"; // Oranžová
     case "CANCELLED":

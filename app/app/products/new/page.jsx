@@ -4,11 +4,12 @@ import productService from "/services/productService";
 import clientService from "/services/clientService";
 import NewEntityForm from "/components/newEntityForm";
 import { useEffect, useState } from "react";
+import { useClient } from "/context/clientContext"; 
 
 const NewProduct = () => {
-  const [clientId, setClientId] = useState(null);
   const [selectFields, setSelectFields] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { selectedClient } = useClient();
   const fields = [
     { name: "sku", label: "SKU", type: "text" },
     { name: "name", label: "Název", type: "text" },
@@ -19,7 +20,7 @@ const NewProduct = () => {
     const loadProducts = async () => {
       try {
         setIsLoading(true);
-        const clients = await clientService.getAll(clientId); // Předpokládám, že tato funkce vrací seznam produktů
+        const clients = await clientService.getAll(selectedClient);
         const options = clients.map((client) => ({
           id: client.id,
           name: client.name, // Zde použij správné pole pro zobrazení názvu produktu

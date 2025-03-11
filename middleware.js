@@ -36,14 +36,11 @@ export async function middleware(req) {
     });
 
     if (response.status !== 200) {
-      console.log("Neplatný token - přesměrování na login");
       return NextResponse.redirect(new URL("/auth/login", req.url));
     }
 
     const user = await response.json();
-    console.log("Uživatel ověřen:", user);
   } catch (error) {
-    console.log("Chyba ověření uživatele:", error);
     return NextResponse.redirect(new URL("/auth/login", req.url));
   }
 

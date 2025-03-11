@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { MenuItem, Select, CircularProgress } from "@mui/material";
-import { updateOperationStatus } from "/services/operationService";
+import operationService from "/services/operationService";
 import { useMessage } from "/context/messageContext";
 
 const StatusDropdown = ({ operationId, currentStatus, onUpdate, statuses }) => {
@@ -23,7 +23,7 @@ const StatusDropdown = ({ operationId, currentStatus, onUpdate, statuses }) => {
     setLoading(true);
 
     try {
-      await updateOperationStatus(operationId, newStatus);
+      await operationService.updateOperationStatus(operationId, newStatus);
       setStatus(newStatus);
       if (onUpdate) onUpdate(); // Aktualizace seznamu operací
     } catch (error) {
@@ -37,13 +37,13 @@ const StatusDropdown = ({ operationId, currentStatus, onUpdate, statuses }) => {
     <CircularProgress size={20} />
   ) : (
     <>
-    <Select value={status || ""} onChange={handleChange} size="small">
-      {statuses.map((s) => (
-        <MenuItem key={s} value={s}>
-          {s}
-        </MenuItem>
-      ))}
-    </Select>
+      <Select value={status || ""} onChange={handleChange} size="small">
+        {statuses.map((s) => (
+          <MenuItem key={s} value={s}>
+            {s}
+          </MenuItem>
+        ))}
+      </Select>
     </>
   );
 };
