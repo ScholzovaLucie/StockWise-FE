@@ -4,11 +4,13 @@ import { useRouter } from "next/navigation";
 import { Box, Paper, Typography } from "@mui/material";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { useClient } from "/context/clientContext";
+import { useTheme } from "@mui/material";
 
 const LowStockWidget = () => {
   const router = useRouter();
   const [lowStock, setLowStock] = useState([]);
   const { selectedClient } = useClient();
+  const theme = useTheme();
 
   useEffect(() => {
     getDashboardLowStock({ clientId: selectedClient })
@@ -41,7 +43,7 @@ const LowStockWidget = () => {
               borderRadius: 2,
               boxShadow: 1,
               cursor: "pointer",
-              "&:hover": { backgroundColor: "#ffe0e0" },
+              "&:hover": { backgroundColor: theme.palette.primary.main },
             }}
             onClick={() => router.push(`/app/products?search=${row.name}`)}
           >

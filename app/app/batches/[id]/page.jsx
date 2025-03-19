@@ -5,6 +5,7 @@ import batchService from "/services/batchService";
 import productService from "/services/productService";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const BatchDetail = () => {
   const { id } = useParams();
@@ -22,9 +23,7 @@ const BatchDetail = () => {
     const loadData = async () => {
       try {
         const data = await batchService.getById(id);
-        console.log(data)
         const products = await productService.getAll();
-        console.log(product)
 
         const productOptions = products.map((product) => ({
           id: product.id,
@@ -32,12 +31,14 @@ const BatchDetail = () => {
         }));
         setOptions(productOptions);
 
-        const productData = productOptions.find((option) => option.id === data.product_id);
+        const productData = productOptions.find(
+          (option) => option.id === data.product_id
+        );
         setProduct(productData || null); // Nastavíme produkt, pokud je nalezen
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     };
 
@@ -53,7 +54,9 @@ const BatchDetail = () => {
           options: options,
           value: product.id, // Pouze id jako hodnota
           update: (newValue) => {
-            const updatedProduct = options.find((option) => option.id === newValue);
+            const updatedProduct = options.find(
+              (option) => option.id === newValue
+            );
             setProduct(updatedProduct || null);
           },
         },
@@ -62,7 +65,7 @@ const BatchDetail = () => {
   }, [options, product]);
 
   if (isLoading || !selectFields) {
-    return <p>Načítání...</p>;
+    return <CircularProgress />;
   }
 
   return (

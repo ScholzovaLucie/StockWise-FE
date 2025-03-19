@@ -31,6 +31,7 @@ function UserInfo({ user, mode, setMode }) {
   };
 
   const handleLogout = () => {
+    sessionStorage.removeItem("selectedClient");
     logout(); // Zavolej službu pro odhlášení (např. API request)
   };
 

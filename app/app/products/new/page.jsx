@@ -4,7 +4,8 @@ import productService from "/services/productService";
 import clientService from "/services/clientService";
 import NewEntityForm from "/components/newEntityForm";
 import { useEffect, useState } from "react";
-import { useClient } from "/context/clientContext"; 
+import { useClient } from "/context/clientContext";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const NewProduct = () => {
   const [selectFields, setSelectFields] = useState(null);
@@ -13,7 +14,13 @@ const NewProduct = () => {
   const fields = [
     { name: "sku", label: "SKU", type: "text" },
     { name: "name", label: "Název", type: "text" },
-    { name: "description", label: "Popis", multiline: true, minRows: 3, type: "text" },
+    {
+      name: "description",
+      label: "Popis",
+      multiline: true,
+      minRows: 3,
+      type: "text",
+    },
   ];
 
   useEffect(() => {
@@ -35,7 +42,7 @@ const NewProduct = () => {
         ]);
       } catch (error) {
         console.error("Error loading products:", error);
-      }finally {
+      } finally {
         setIsLoading(false);
       }
     };
@@ -44,12 +51,11 @@ const NewProduct = () => {
   }, []);
 
   if (isLoading || !selectFields) {
-    return <p>Načítání...</p>; // Spinner můžeš přidat podle potřeby
+    return <CircularProgress />;
   }
 
-
   return (
-      <NewEntityForm
+    <NewEntityForm
       title="Nový produkt"
       fields={fields}
       service={productService}

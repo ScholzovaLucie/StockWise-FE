@@ -31,7 +31,6 @@ export default function AuthPage() {
     try {
       const userData = await loginUser(email, password);
       setUser(userData.user);
-      console.log(localStorage.getItem("lastVisitedUrl"));
       const lastVisitedUrl =
         localStorage.getItem("lastVisitedUrl") || "/app/dashboard";
       router.push(lastVisitedUrl);

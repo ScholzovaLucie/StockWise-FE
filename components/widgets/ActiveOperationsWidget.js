@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Paper, Typography } from "@mui/material";
 import { useClient } from "/context/clientContext";
+import { useTheme } from "@mui/material";
 
 // 🏷 Funkce pro barevné označení stavů operací
 const getStatusColor = (status) => {
@@ -22,6 +23,7 @@ const ActiveOperationsWidget = () => {
   const { selectedClient } = useClient();
   const [operations, setOperations] = useState([]);
   const router = useRouter();
+  const theme = useTheme();
 
   useEffect(() => {
     getDashboardActiveOperations({ clientId: selectedClient })
@@ -54,7 +56,7 @@ const ActiveOperationsWidget = () => {
               borderRadius: 2,
               boxShadow: 1,
               cursor: "pointer",
-              "&:hover": { backgroundColor: "#f5f5f5" },
+              "&:hover": { backgroundColor: theme.palette.primary.main },
             }}
             onClick={() => router.push(`/app/operations?search=${op.number}`)}
           >

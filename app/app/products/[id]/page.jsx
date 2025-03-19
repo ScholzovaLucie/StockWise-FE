@@ -5,6 +5,7 @@ import productService from "/services/productService";
 import clientService from "/services/clientService";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -33,7 +34,7 @@ const ProductDetail = () => {
           {
             name: "client",
             label: "Client",
-            fetchData: getClients,
+            fetchData: clientService.getAll,
             options: options,
             value: data.client_id,
             update: setClientId,
@@ -51,7 +52,7 @@ const ProductDetail = () => {
   }, [id]);
 
   if (isLoading || !selectFields) {
-    return <p>Načítání...</p>; // Spinner můžeš přidat podle potřeby
+    return <CircularProgress />;
   }
 
   return (

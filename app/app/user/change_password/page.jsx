@@ -1,46 +1,49 @@
 "use client";
 
-import React, { useState } from 'react';
-import { TextField, Button, Box, Typography, Alert } from '@mui/material';
-import { changePassword } from 'services/authService';
+import React, { useState } from "react";
+import { TextField, Button, Box, Typography, Alert } from "@mui/material";
+import { changePassword } from "services/authService";
+import { useMessage } from "/context/messageContext";
 
 const ChangePasswordForm = () => {
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const { message, setMessage } = useMessage();
 
   const passwordsMatch = newPassword === confirmPassword;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
 
     if (!passwordsMatch) {
-      setError('Nová hesla se neshodují.');
+      setMessage("Nová hesla se neshodují.");
       return;
     }
 
     try {
-      const response = await changePassword(oldPassword, newPassword, confirmPassword);
-      setSuccess(response.data.message);
-      setOldPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
+      const response = await changePassword(
+        oldPassword,
+        newPassword,
+        confirmPassword
+      );
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
     } catch (error) {
-      setError(error?.error || 'Něco se pokazilo.');
+      setMessage(error?.error || "Něco se pokazilo.");
     }
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 400, mx: 'auto', mt: 4 }}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ maxWidth: 400, mx: "auto", mt: 4 }}
+    >
       <Typography variant="h5" gutterBottom>
         Změna hesla
       </Typography>
-      {error && <Alert severity="error">{error}</Alert>}
-      {success && <Alert severity="success">{success}</Alert>}
 
       <TextField
         label="Staré heslo"
@@ -60,7 +63,11 @@ const ChangePasswordForm = () => {
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
         error={!passwordsMatch && confirmPassword.length > 0}
-        helperText={!passwordsMatch && confirmPassword.length > 0 ? 'Nová hesla se neshodují.' : ''}
+        helperText={
+          !passwordsMatch && confirmPassword.length > 0
+            ? "Nová hesla se neshodují."
+            : ""
+        }
       />
       <TextField
         label="Potvrzení nového hesla"
@@ -71,9 +78,19 @@ const ChangePasswordForm = () => {
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         error={!passwordsMatch && confirmPassword.length > 0}
-        helperText={!passwordsMatch && confirmPassword.length > 0 ? 'Nová hesla se neshodují.' : ''}
+        helperText={
+          !passwordsMatch && confirmPassword.length > 0
+            ? "Nová hesla se neshodují."
+            : ""
+        }
       />
-      <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }} disabled={!passwordsMatch || !newPassword}>
+      <Button
+        type="submit"
+        variant="contained"
+        fullWidth
+        sx={{ mt: 2 }}
+        disabled={!passwordsMatch || !newPassword}
+      >
         Změnit heslo
       </Button>
     </Box>

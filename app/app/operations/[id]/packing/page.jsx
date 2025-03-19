@@ -23,6 +23,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { useMessage } from "/context/messageContext";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const PackingPage = () => {
   const { id } = useParams();
@@ -113,7 +114,7 @@ const PackingPage = () => {
   const handleRemoveFromBox = async (groupId) => {
     try {
       await removeFromBox(groupId);
-      alert("Produkt odebrán z krabice!");
+      setMessage("Produkt odebrán z krabice!");
 
       // Aktualizace seznamu produktů v krabici
       const updatedProducts = await boxService.getProductsInBox(selectedBox);
@@ -181,7 +182,7 @@ const PackingPage = () => {
     }
   };
 
-  if (loading) return <Typography>Načítám...</Typography>;
+  if (loading) return <CircularProgress />;
   if (!operation) return <Typography>Operace nenalezena.</Typography>;
 
   return (

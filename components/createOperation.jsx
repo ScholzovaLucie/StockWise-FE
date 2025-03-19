@@ -187,7 +187,6 @@ const OperationForm = ({ operationId = null }) => {
         setMessage("Operace byla úspěšně vytvořena.");
       }
     } catch (error) {
-      console.log(error);
       setMessage(error.message);
     }
   };
@@ -259,6 +258,15 @@ const OperationForm = ({ operationId = null }) => {
       <Divider style={{ margin: "20px 0" }} />
 
       {/* Fakturační a doručovací údaje vedle sebe */}
+      <TextField
+        sx={{ mb: 1 }}
+        label="Poznámka"
+        name="delivery_note"
+        value={deliveryData["delivery_note"]}
+        onChange={(e) => handleInputChange(e, setDeliveryData)}
+        InputLabelProps={{ shrink: true }}
+        fullWidth
+      />
       {operationType === "OUT" && (
         <Grid container spacing={2}>
           {/* Fakturační údaje */}
@@ -270,49 +278,63 @@ const OperationForm = ({ operationId = null }) => {
               sx={{ mb: 1 }}
               label="Název firmy"
               name="invoice_name"
+              value={invoiceData["invoice_name"]}
               onChange={(e) => handleInputChange(e, setInvoiceData)}
+              InputLabelProps={{ shrink: true }}
               fullWidth
             />
             <TextField
               sx={{ mb: 1 }}
               label="Ulice"
               name="invoice_street"
+              value={invoiceData["invoice_street"]}
               onChange={(e) => handleInputChange(e, setInvoiceData)}
+              InputLabelProps={{ shrink: true }}
               fullWidth
             />
             <TextField
               sx={{ mb: 1 }}
               label="Město"
               name="invoice_city"
+              value={invoiceData["invoice_city"]}
               onChange={(e) => handleInputChange(e, setInvoiceData)}
+              InputLabelProps={{ shrink: true }}
               fullWidth
             />
             <TextField
               sx={{ mb: 1 }}
               label="PSČ"
               name="invoice_psc"
+              value={invoiceData["invoice_psc"]}
               onChange={(e) => handleInputChange(e, setInvoiceData)}
+              InputLabelProps={{ shrink: true }}
               fullWidth
             />
             <TextField
               sx={{ mb: 1 }}
               label="Telefon"
               name="invoice_phone"
+              value={invoiceData["invoice_phone"]}
               onChange={(e) => handleInputChange(e, setInvoiceData)}
+              InputLabelProps={{ shrink: true }}
               fullWidth
             />
             <TextField
               sx={{ mb: 1 }}
               label="IČO"
               name="invoice_ico"
+              value={invoiceData["invoice_ico"]}
               onChange={(e) => handleInputChange(e, setInvoiceData)}
+              InputLabelProps={{ shrink: true }}
               fullWidth
             />
             <TextField
               sx={{ mb: 1 }}
               label="DIČ"
               name="invoice_vat"
+              value={invoiceData["invoice_vat"]}
               onChange={(e) => handleInputChange(e, setInvoiceData)}
+              InputLabelProps={{ shrink: true }}
               fullWidth
             />
           </Grid>
@@ -324,37 +346,57 @@ const OperationForm = ({ operationId = null }) => {
             </Typography>
             <TextField
               sx={{ mb: 1 }}
+              type="date"
+              label="Datum doručení"
+              name="delivery_date"
+              value={deliveryData["delivery_date"]}
+              onChange={(e) => handleInputChange(e, setDeliveryData)}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+            />
+            <TextField
+              sx={{ mb: 1 }}
               label="Jméno příjemce"
               name="delivery_name"
+              value={deliveryData["delivery_name"]}
               onChange={(e) => handleInputChange(e, setDeliveryData)}
+              InputLabelProps={{ shrink: true }}
               fullWidth
             />
             <TextField
               sx={{ mb: 1 }}
               label="Ulice"
               name="delivery_street"
+              value={deliveryData["delivery_street"]}
               onChange={(e) => handleInputChange(e, setDeliveryData)}
+              InputLabelProps={{ shrink: true }}
               fullWidth
             />
             <TextField
               sx={{ mb: 1 }}
               label="Město"
               name="delivery_city"
+              value={deliveryData["delivery_city"]}
               onChange={(e) => handleInputChange(e, setDeliveryData)}
+              InputLabelProps={{ shrink: true }}
               fullWidth
             />
             <TextField
               sx={{ mb: 1 }}
               label="PSČ"
               name="delivery_psc"
+              value={deliveryData["delivery_psc"]}
               onChange={(e) => handleInputChange(e, setDeliveryData)}
+              InputLabelProps={{ shrink: true }}
               fullWidth
             />
             <TextField
               sx={{ mb: 1 }}
               label="Telefon"
               name="delivery_phone"
+              value={deliveryData["delivery_phone"]}
               onChange={(e) => handleInputChange(e, setDeliveryData)}
+              InputLabelProps={{ shrink: true }}
               fullWidth
             />
           </Grid>
@@ -371,7 +413,7 @@ const OperationForm = ({ operationId = null }) => {
               <TextField
                 select
                 label="Produkt"
-                value={product.productId}
+                value={product.productId || product.batch.product.id}
                 onChange={(e) => handleProductChange(index, e.target.value)}
                 fullWidth
                 disabled={!!operationId} // Pokud existuje operationId, pole je read-only
@@ -389,7 +431,7 @@ const OperationForm = ({ operationId = null }) => {
                 ))}
               </TextField>
             </Grid>
-            {operationType === "OUT" && (
+            {operationType === "OUT" && !operationId && (
               <Grid item xs={1}>
                 <Typography
                   variant="body2"
@@ -426,7 +468,7 @@ const OperationForm = ({ operationId = null }) => {
             <Grid item xs={2}>
               <TextField
                 label="Šarže"
-                value={product.batchNumber}
+                value={product.batchNumber || product.batch.batch_number}
                 onChange={(e) => {
                   const newProducts = [...products];
                   newProducts[index].batchNumber = e.target.value;
@@ -434,13 +476,14 @@ const OperationForm = ({ operationId = null }) => {
                 }}
                 fullWidth
                 disabled={!!operationId}
+                InputLabelProps={{ shrink: true }}
               />
             </Grid>
             <Grid item xs={2}>
               <TextField
                 label="Expirace"
                 type="date"
-                value={product.expirationDate}
+                value={product.expirationDate || product.batch.expiration_date}
                 onChange={(e) => {
                   const newProducts = [...products];
                   newProducts[index].expirationDate = e.target.value;
@@ -448,6 +491,7 @@ const OperationForm = ({ operationId = null }) => {
                 }}
                 fullWidth
                 disabled={!!operationId}
+                InputLabelProps={{ shrink: true }}
               />
             </Grid>
             {operationType == "IN" && (
@@ -462,6 +506,7 @@ const OperationForm = ({ operationId = null }) => {
                   }}
                   fullWidth
                   disabled={!!operationId}
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
             )}

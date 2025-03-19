@@ -9,10 +9,12 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { fetchCurrentUser, logout } from "/services/authService";
-import { getClients } from "/services/clientService";
-import { updateUser } from "/services/userSrvices";
+import { logout, fetchCurrentUser } from "/services/authService";
+import clientService from "/services/clientService";
+import userSrvices from "/services/userSrvices";
 import { useRouter } from "next/navigation"; // Import routeru
+import { useMessage } from "/context/messageContext";
+import { useClient } from "/context/clientContext";
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
@@ -22,10 +24,13 @@ const UserProfile = () => {
     email: "",
     client_id: [], // Pole pro více klientů
   });
+  const { message, setMessage } = useMessage();
+  const { selectedClient, setSelectedClient } = useClient();
 
   const router = useRouter();
 
   const handleLogout = () => {
+    sessionStorage.removeItem("selectedClient");
     logout(); // Zavolej službu pro odhlášení (např. API request)
   };
 
@@ -43,7 +48,7 @@ const UserProfile = () => {
     };
 
     const loadClients = async () => {
-      const clientList = await getClients(null, true);
+      const clientList = await clientService.getAll({ all: true });
       setClients(clientList);
     };
 
@@ -62,10 +67,13 @@ const UserProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateUser(user.id, formData);
-      alert("Údaje byly úspěšně aktualizovány!");
+      sessionStorage.removeItem("selectedClient");
+      print("remove client -> all");
+      setSelectedClient("all");
+      await userSrvices.updateUser(user.id, formData);
+      setMessage("Údaje byly úspěšně aktualizovány!");
     } catch (error) {
-      alert("Aktualizace se nezdařila.");
+      setMessage(error?.message || "Aktualizace se nezdařila.");
     }
   };
 

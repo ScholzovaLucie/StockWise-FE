@@ -1,6 +1,6 @@
-"use client"; // Důležité pro správnou funkčnost v Next.js
+"use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, Snackbar } from "@mui/material";
@@ -10,25 +10,27 @@ import UserSection from "/components/UserSection";
 import { usePathname, useRouter } from "next/navigation";
 import { ClientProvider } from "/context/clientContext"; // Import ClientProvider
 import { MessageProvider, useMessage } from "/context/messageContext";
-import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
-import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
-import PersonSearchRoundedIcon from "@mui/icons-material/PersonSearchRounded";
 import ClientSelector from "/components/clientSelector";
-import BatchPredictionRoundedIcon from "@mui/icons-material/BatchPredictionRounded";
-import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
-import PlaceIcon from "@mui/icons-material/Place";
-import WorkspacesIcon from "@mui/icons-material/Workspaces";
-import WarehouseIcon from "@mui/icons-material/Warehouse";
-import LoopIcon from "@mui/icons-material/Loop";
 import LayoutWrapper from "./LayoutWrapper";
-import SmartToyIcon from "@mui/icons-material/SmartToy";
 import RouteTracker from "/context/routerTracker";
+import {
+  DashboardRounded as DashboardIcon,
+  Inventory2Rounded as InventoryIcon,
+  PersonSearchRounded as PersonIcon,
+  BatchPredictionRounded as BatchIcon,
+  LocalGroceryStore as StoreIcon,
+  Place as PlaceIcon,
+  Workspaces as WorkspacesIcon,
+  Warehouse as WarehouseIcon,
+  Loop as LoopIcon,
+  SmartToy as SmartToyIcon,
+} from "@mui/icons-material";
 
 const NAVIGATION = [
   {
     segment: "app/dashboard",
     title: "Dashboard",
-    icon: <DashboardRoundedIcon color="primary" />,
+    icon: <DashboardIcon color="primary" />,
   },
   {
     segment: "app/chatbot",
@@ -38,24 +40,24 @@ const NAVIGATION = [
   {
     segment: "app/clients",
     title: "Klienti",
-    icon: <PersonSearchRoundedIcon color="primary" />,
+    icon: <PersonIcon color="primary" />,
   },
   { kind: "divider" },
   {
     segment: "app/products",
     title: "Položka",
-    icon: <LocalGroceryStoreIcon color="primary" />,
+    icon: <StoreIcon color="primary" />,
   },
   {
     segment: "app/batches",
     title: "Šarže",
-    icon: <BatchPredictionRoundedIcon color="primary" />,
+    icon: <BatchIcon color="primary" />,
   },
   { kind: "divider" },
   {
     segment: "app/boxes",
     title: "Krabice",
-    icon: <Inventory2RoundedIcon color="primary" />,
+    icon: <InventoryIcon color="primary" />,
   },
   {
     segment: "app/groups",
@@ -83,7 +85,19 @@ const NAVIGATION = [
 export default function AppLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [mode, setMode] = useState("light");
+
+  // 🛠 Inicializace módu z sessionStorage
+  const [mode, setMode] = useState(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("themeMode") || "light";
+    }
+    return "light";
+  });
+
+  // 🛠 Uložení módu do sessionStorage při změně
+  useEffect(() => {
+    sessionStorage.setItem("themeMode", mode);
+  }, [mode]);
 
   const theme = useMemo(
     () => (mode === "light" ? lightTheme : darkTheme),
@@ -107,7 +121,7 @@ export default function AppLayout({ children }) {
               slots={{
                 toolbarActions: () => (
                   <>
-                    <ClientSelector /> {/* Přidáme výběr klienta */}
+                    <ClientSelector />
                     <UserSection mode={mode} setMode={setMode} />
                   </>
                 ),

@@ -9,11 +9,13 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import WarehouseIcon from "@mui/icons-material/Warehouse";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import { useClient } from "/context/clientContext";
+import { useTheme } from "@mui/material";
 
 const OverviewWidget = () => {
   const [overview, setOverview] = useState(null);
   const router = useRouter();
   const { selectedClient } = useClient();
+  const theme = useTheme();
 
   useEffect(() => {
     getDashboardOverview({ clientId: selectedClient })
@@ -87,7 +89,9 @@ const OverviewWidget = () => {
             boxShadow: 1,
             p: 1,
             "&:hover": {
-              backgroundColor: item.link ? "#f5f5f5" : "transparent",
+              backgroundColor: item.link
+                ? theme.palette.primary.main
+                : "transparent",
             },
             cursor: item.link ? "pointer" : "default",
           }}

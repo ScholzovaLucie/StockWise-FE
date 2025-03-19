@@ -6,6 +6,7 @@ import boxService from "/services/boxService";
 import batchService from "/services/batchService";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const GroupDetail = () => {
   const { id } = useParams();
@@ -17,9 +18,7 @@ const GroupDetail = () => {
   const [selectFields, setSelectFields] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fields = [
-    { name: "quantity", label: "Quantity", type: "number" },
-  ];
+  const fields = [{ name: "quantity", label: "Quantity", type: "number" }];
 
   useEffect(() => {
     const loadData = async () => {
@@ -33,8 +32,10 @@ const GroupDetail = () => {
         }));
         setBoxOptions(boxesOptions);
 
-        const boxData = boxesOptions.find((option) => option.id === data.box_id);
-        setProduct(boxData || null); 
+        const boxData = boxesOptions.find(
+          (option) => option.id === data.box_id
+        );
+        setProduct(boxData || null);
 
         const batches = await batchService.getAll();
 
@@ -44,12 +45,14 @@ const GroupDetail = () => {
         }));
         setBatchOptions(batchesOptions);
 
-        const batchData = batchesOptions.find((option) => option.id === data.box_id);
-        setProduct(batchData || null); 
+        const batchData = batchesOptions.find(
+          (option) => option.id === data.box_id
+        );
+        setProduct(batchData || null);
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     };
 
@@ -57,33 +60,34 @@ const GroupDetail = () => {
   }, [id]);
 
   useEffect(() => {
-      setSelectFields([
-        {
-          name: "box_id",
-          label: "Box",
-          options: boxOptions,
-          value: box?.id || null, // Pouze id jako hodnota
-          update: (newValue) => {
-            const updateBox = boxOptions.find((option) => option.id === newValue);
-            setProduct(updateBox || null);
-          },
+    setSelectFields([
+      {
+        name: "box_id",
+        label: "Box",
+        options: boxOptions,
+        value: box?.id || null, // Pouze id jako hodnota
+        update: (newValue) => {
+          const updateBox = boxOptions.find((option) => option.id === newValue);
+          setProduct(updateBox || null);
         },
-        {
-          name: "batch_id",
-          label: "Batch",
-          options: batchOptions,
-          value: batch?.id || null, // Pouze id jako hodnota
-          update: (newValue) => {
-            const updateBatch = batchOptions.find((option) => option.id === newValue);
-            setProduct(updateBatch || null);
-          },
-        }
-      ]);
-
+      },
+      {
+        name: "batch_id",
+        label: "Batch",
+        options: batchOptions,
+        value: batch?.id || null, // Pouze id jako hodnota
+        update: (newValue) => {
+          const updateBatch = batchOptions.find(
+            (option) => option.id === newValue
+          );
+          setProduct(updateBatch || null);
+        },
+      },
+    ]);
   }, [boxOptions, batchOptions, product]);
 
   if (isLoading || !selectFields) {
-    return <p>Načítání...</p>;
+    return <CircularProgress />;
   }
 
   return (

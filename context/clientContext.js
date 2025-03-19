@@ -1,11 +1,22 @@
-"use client"; // Důležité pro správnou funkčnost v Next.js
+"use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const ClientContext = createContext();
 
 export const ClientProvider = ({ children }) => {
-  const [selectedClient, setSelectedClient] = useState(null);
+  const [selectedClient, setSelectedClient] = useState(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("selectedClient") || null;
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (selectedClient !== null) {
+      sessionStorage.setItem("selectedClient", selectedClient);
+    }
+  }, [selectedClient]);
 
   return (
     <ClientContext.Provider value={{ selectedClient, setSelectedClient }}>

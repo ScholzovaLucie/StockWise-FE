@@ -125,6 +125,23 @@ const operationService = {
       );
     }
   },
+
+  updateOperation: async (operationId, operationData) => {
+    try {
+      const response = await apiClient.patch(
+        `/operations/${operationId}/update/`,
+        operationData,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.error || "Chyba při ukládání operace."
+      );
+    }
+  },
 };
 
 export default operationService;

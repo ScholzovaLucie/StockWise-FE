@@ -1,4 +1,3 @@
-// authService.js
 import api from "./apiClient";
 import Cookies from "js-cookie";
 
@@ -7,12 +6,8 @@ export const loginUser = async (email, password) => {
     const response = await api.post(
       "/auth/login/",
       { email, password },
-      { withCredentials: true } // Posílá cookies z backendu
+      { withCredentials: true } // Zajistí přenos cookies
     );
-
-    if (response.data.access_token) {
-      localStorage.setItem("access_token", response.data.access_token);
-    }
 
     return response.data;
   } catch (error) {
@@ -33,7 +28,9 @@ export const registerUser = async (userData) => {
 
 export const fetchCurrentUser = async () => {
   try {
-    const response = await api.get("/auth/me/", { withCredentials: true });
+    const response = await api.get("/auth/me/", {
+      withCredentials: true, // Backend pošle uživatelská data v odpovědi
+    });
     return response.data;
   } catch (error) {
     return null;
@@ -55,8 +52,6 @@ export const refreshAccessToken = async () => {
 
 export const logout = async () => {
   try {
-    Cookies.remove("access_token");
-    Cookies.remove("refresh_token");
     await api.post("/auth/logout/", {}, { withCredentials: true });
   } catch (error) {}
   window.location.href = "/auth/login";
@@ -68,13 +63,13 @@ export const changePassword = async (
   confirm_password
 ) => {
   try {
-    const response = await api.post("/auth/change-password/", {
-      old_password,
-      new_password,
-      confirm_password,
-    });
+    const response = await api.post(
+      "/auth/change-password/",
+      { old_password, new_password, confirm_password },
+      { withCredentials: true }
+    );
     return response.data;
   } catch (error) {
-    throw new Error("Změna hesla se zetdařila.");
+    throw new Error("Změna hesla se nezdařila.");
   }
 };
