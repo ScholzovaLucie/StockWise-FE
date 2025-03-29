@@ -13,6 +13,7 @@ import { MessageProvider, useMessage } from "/context/messageContext";
 import ClientSelector from "/components/clientSelector";
 import LayoutWrapper from "./LayoutWrapper";
 import RouteTracker from "/context/routerTracker";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import {
   DashboardRounded as DashboardIcon,
   Inventory2Rounded as InventoryIcon,
@@ -36,6 +37,11 @@ const NAVIGATION = [
     segment: "app/chatbot",
     title: "Chat",
     icon: <SmartToyIcon color="primary" />,
+  },
+  {
+    segment: "app/statistic",
+    title: "Statistiky",
+    icon: <QueryStatsIcon color="primary" />,
   },
   {
     segment: "app/clients",

@@ -6,6 +6,11 @@ export async function middleware(req) {
 
   if (
     pathname.startsWith("/auth/login") ||
+    pathname.startsWith("/auth/forgot-password") ||
+    pathname.startsWith("/auth/reset-password") ||
+    pathname.startsWith("/auth/registr") ||
+    pathname.startsWith("/auth/login/reset-password") ||
+    pathname.startsWith("/auth/login/forgot-password") ||
     pathname.startsWith("/auth/registr") ||
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||

@@ -77,6 +77,14 @@ export default function AuthPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <Box sx={{ textAlign: "right", mt: 1, mb: 2 }}>
+              <Button
+                size="small"
+                onClick={() => router.push("/auth/login/forgot-password")}
+              >
+                Zapomněli jste heslo?
+              </Button>
+            </Box>
             <Button
               fullWidth
               type="submit"

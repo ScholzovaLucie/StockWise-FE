@@ -68,7 +68,6 @@ const UserProfile = () => {
     e.preventDefault();
     try {
       sessionStorage.removeItem("selectedClient");
-      print("remove client -> all");
       setSelectedClient("all");
       await userSrvices.updateUser(user.id, formData);
       setMessage("Údaje byly úspěšně aktualizovány!");

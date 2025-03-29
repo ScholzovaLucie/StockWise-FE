@@ -15,11 +15,15 @@ export const loginUser = async (email, password) => {
   }
 };
 
-export const registerUser = async (userData) => {
+export const registerUser = async (email, password) => {
   try {
-    const response = await api.post("/auth/register/", userData, {
-      withCredentials: true,
-    });
+    const response = await api.post(
+      "/auth/register/",
+      { email, password },
+      {
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.error || "Registrace se nezdařila.");
@@ -71,5 +75,36 @@ export const changePassword = async (
     return response.data;
   } catch (error) {
     throw new Error("Změna hesla se nezdařila.");
+  }
+};
+
+export const requestPasswordReset = async (email) => {
+  try {
+    const response = await api.post(
+      "/auth/request-password-reset/",
+      { email },
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.error ||
+        "Nepodařilo se odeslat e-mail pro reset hesla."
+    );
+  }
+};
+
+export const resetPassword = async (token, new_password, confirm_password) => {
+  try {
+    const response = await api.post(
+      "/auth/reset-password/",
+      { token, new_password, confirm_password },
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.error || "Nepodařilo se změnit heslo."
+    );
   }
 };

@@ -13,7 +13,10 @@ import {
   Card,
   CardContent,
   CircularProgress,
+  InputAdornment,
 } from "@mui/material";
+import LockIcon from "@mui/icons-material/Lock";
+import { red } from "@mui/material/colors";
 
 export default function AuthPage() {
   const { setUser } = useAuth();
@@ -30,10 +33,13 @@ export default function AuthPage() {
     setError("");
 
     try {
-      const userData = await registerUser(email, password);
-      setUser(userData.user);
-      localStorage.removeItem("lastVisitedUrl");
-      router.push("/app/dashboard");
+      if (password === passwordAgain) {
+        console.log(password);
+        const userData = await registerUser(email, password);
+        setUser(userData.user);
+        localStorage.removeItem("lastVisitedUrl");
+        router.push("/app/dashboard");
+      }
     } catch (err) {
       setError(err?.message || "Nastala neočekávaná chyba.");
     } finally {
@@ -76,6 +82,13 @@ export default function AuthPage() {
               margin="normal"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
             <TextField
               fullWidth
@@ -84,13 +97,29 @@ export default function AuthPage() {
               margin="normal"
               value={passwordAgain}
               onChange={(e) => setPasswordAgain(e.target.value)}
+              error={passwordAgain !== password} // Podmínka, kdy se má pole (a ikona) začervenat
+              helperText={
+                passwordAgain !== password ? "Hesla se neshodují" : ""
+              }
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon
+                      sx={{
+                        color:
+                          passwordAgain !== password ? red[500] : "inherit",
+                      }}
+                    />
+                  </InputAdornment>
+                ),
+              }}
             />
             <Button
               fullWidth
               type="submit"
               variant="contained"
               color="primary"
-              disabled={loading}
+              disabled={loading || password != passwordAgain}
               onClick={handleSubmit}
             >
               {loading ? (

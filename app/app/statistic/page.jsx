@@ -7,25 +7,17 @@ import "react-resizable/css/styles.css";
 import {
   Box,
   IconButton,
-  Paper,
-  Typography,
+  Tooltip,
   Select,
   MenuItem,
-  FormControl,
   InputLabel,
-  Tooltip,
+  FormControl,
+  Alert,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import StatsWidget from "/components/statsWidget";
+import STAT_LABELS from "/constants";
 import { getUserWidgets, saveUserWidgets } from "/services/dashboardService";
-
-import ActiveOperationsWidget from "/components/widgets/ActiveOperationsWidget";
-import EfficiencyWidget from "/components/widgets/EfficiencyWidget";
-import ExtendedStatsWidget from "/components/widgets/ExtendedStatsWidget";
-import LowStockWidget from "/components/widgets/LowStockWidget";
-import RecentActivityWidget from "/components/widgets/RecentActivityWidget";
-import OverviewWidget from "/components/widgets/OverviewWidget";
-import StatsWidget from "/components/widgets/StatsWidget";
 import { useClient } from "/context/clientContext";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -33,34 +25,10 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
 const cols = { lg: 9, md: 6, sm: 4, xs: 2, xxs: 1 };
 
-const widgetComponents = {
-  overview: OverviewWidget,
-  activeOperations: ActiveOperationsWidget,
-  efficiency: EfficiencyWidget,
-  stats: ExtendedStatsWidget,
-  lowStock: LowStockWidget,
-  recentActivity: RecentActivityWidget,
-  statsWidget: StatsWidget,
-};
-
-const getWidgetTitle = (type) => {
-  const titles = {
-    overview: "Přehled skladu",
-    activeOperations: "Aktivní operace",
-    efficiency: "Efektivita skladu",
-    stats: "Přehled aktivity uživatelů",
-    extendedStats: "Rozšířené statistiky",
-    lowStock: "Nízké zásoby",
-    recentActivity: "Nedávná aktivita",
-    statsWidget: "Statistiky operací",
-  };
-  return titles[type] || "Widget";
-};
-
 const getDefaultLayout = (id) => ({
   i: id,
   x: 0,
-  y: Infinity,
+  y: 0, // původně Infinity
   w: 3,
   h: 6,
   isDraggable: false,
@@ -69,14 +37,14 @@ const getDefaultLayout = (id) => ({
   static: false,
 });
 
-const DashboardPage = () => {
+const StatsDashboardPage = () => {
   const [widgets, setWidgets] = useState([]);
   const [layouts, setLayouts] = useState({ lg: [] });
   const [editMode, setEditMode] = useState(false);
   const { selectedClient } = useClient();
 
   useEffect(() => {
-    getUserWidgets()
+    getUserWidgets(true)
       .then((data) => {
         let widgetsData = data.widgets || [];
         let layoutData = data.layout || { lg: [] };
@@ -84,26 +52,31 @@ const DashboardPage = () => {
         if (!widgetsData.length) {
           widgetsData = [
             {
-              id: "overview",
-              type: "overview",
-              layout: getDefaultLayout("overview"),
+              id: "stockSummary",
+              type: "stockSummary",
+              layout: getDefaultLayout("stockSummary"),
             },
             {
-              id: "activeOperations",
-              type: "activeOperations",
-              layout: getDefaultLayout("activeOperations"),
+              id: "lowStock",
+              type: "lowStock",
+              layout: getDefaultLayout("lowStock"),
             },
             {
-              id: "efficiency",
-              type: "efficiency",
-              layout: getDefaultLayout("efficiency"),
+              id: "topProducts",
+              type: "topProducts",
+              layout: getDefaultLayout("topProducts"),
             },
-            { id: "stats", type: "stats", layout: getDefaultLayout("stats") },
+            {
+              id: "monthlyOverview",
+              type: "stmonthlyOverviewats",
+              layout: getDefaultLayout("monthlyOverview"),
+            },
           ];
           layoutData.lg = widgetsData.map((widget) => widget.layout);
         }
 
         setWidgets(widgetsData);
+        console.log("layoutData", layoutData);
         setLayouts(layoutData);
       })
       .catch(console.error);
@@ -140,9 +113,10 @@ const DashboardPage = () => {
     setEditMode(newEditMode);
     setWidgets(updatedWidgets);
 
-    saveUserWidgets({ widgets: updatedWidgets, layout: cleanedLayouts }).catch(
-      console.error
-    );
+    saveUserWidgets(
+      { widgets: updatedWidgets, layout: cleanedLayouts },
+      true
+    ).catch(console.error);
   };
 
   const removeWidget = (id) => {
@@ -154,9 +128,10 @@ const DashboardPage = () => {
     setWidgets(updatedWidgets);
     setLayouts(updatedLayouts);
 
-    saveUserWidgets({ widgets: updatedWidgets, layout: updatedLayouts }).catch(
-      console.error
-    );
+    saveUserWidgets(
+      { widgets: updatedWidgets, layout: updatedLayouts },
+      true
+    ).catch(console.error);
   };
 
   const addWidget = (widgetType) => {
@@ -170,16 +145,21 @@ const DashboardPage = () => {
     const cleanedLayouts = cleanLayout(updatedLayouts);
 
     setWidgets(updatedWidgets);
+    console.log("updatedLayouts", updatedLayouts);
     setLayouts(updatedLayouts);
 
-    saveUserWidgets({
-      widgets: updatedWidgets,
-      layout: cleanLayout(cleanedLayouts),
-    }).catch(console.error);
+    saveUserWidgets(
+      {
+        widgets: updatedWidgets,
+        layout: cleanLayout(cleanedLayouts),
+      },
+      true
+    ).catch(console.error);
   };
 
   const onLayoutChange = (currentLayout, allLayouts) => {
     if (editMode) {
+      console.log("allLayouts", allLayouts);
       setLayouts(allLayouts);
 
       const updatedWidgets = widgets.map((widget) => ({
@@ -196,14 +176,17 @@ const DashboardPage = () => {
 
       const cleanedLayouts = cleanLayout(allLayouts);
       setWidgets(updatedWidgets);
-      saveUserWidgets({
-        widgets: updatedWidgets,
-        layout: cleanedLayouts,
-      }).catch(console.error);
+      saveUserWidgets(
+        {
+          widgets: updatedWidgets,
+          layout: cleanedLayouts,
+        },
+        true
+      ).catch(console.error);
     }
   };
 
-  return (
+  return selectedClient ? (
     <Box sx={{ p: 1 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         {/* Přepínač edit mode */}
@@ -216,29 +199,23 @@ const DashboardPage = () => {
           </IconButton>
         </Tooltip>
 
-        {/* 📌 Select menu pro přidání widgetů */}
         {editMode && (
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="body1">Přidat widget:</Typography>
             <FormControl sx={{ minWidth: 200 }} size="small">
-              <InputLabel id="add-widget-label">Vyber widget</InputLabel>
+              <InputLabel id="add-widget-label">Vyber statistiku</InputLabel>
               <Select
                 labelId="add-widget-label"
                 onChange={(e) => addWidget(e.target.value)}
-                disabled={!editMode}
                 defaultValue=""
               >
                 <MenuItem value="">
-                  <em>Vyber widget</em>
+                  <em>Vyber</em>
                 </MenuItem>
-                {Object.keys(widgetComponents)
-                  .filter(
-                    (option) =>
-                      !widgets.some((widget) => widget.type === option)
-                  )
-                  .map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {getWidgetTitle(option)}
+                {Object.keys(STAT_LABELS)
+                  .filter((id) => !widgets.some((w) => w.id === id))
+                  .map((key) => (
+                    <MenuItem key={key} value={key}>
+                      {STAT_LABELS[key]}
                     </MenuItem>
                   ))}
               </Select>
@@ -246,7 +223,6 @@ const DashboardPage = () => {
           </Box>
         )}
       </Box>
-      {/* Responzivní grid layout */}
       <ResponsiveGridLayout
         key={editMode}
         className="layout"
@@ -254,46 +230,36 @@ const DashboardPage = () => {
         breakpoints={breakpoints}
         cols={cols}
         rowHeight={30}
-        width={window.innerWidth}
+        width={typeof window !== "undefined" ? window.innerWidth : 1200}
         onLayoutChange={onLayoutChange}
         preventCollision={false}
         compactType="vertical"
         isResizable={editMode}
         isDraggable={editMode}
-        moved={editMode}
-        static={editMode}
       >
-        {widgets.map((widget) => {
-          const WidgetComponent = widgetComponents[widget.type];
-          return (
-            <div
-              key={widget.id}
-              data-grid={{
-                ...widget.layout,
-                isDraggable: editMode,
-                isResizable: editMode,
-              }}
-            >
-              <Paper sx={{ p: 2, height: "100%", position: "relative" }}>
-                <Typography variant="h6">
-                  {getWidgetTitle(widget.type)}
-                </Typography>
-                {editMode && (
-                  <IconButton
-                    sx={{ position: "absolute", top: 5, right: 5 }}
-                    onClick={() => removeWidget(widget.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                )}
-                {WidgetComponent && <WidgetComponent />}
-              </Paper>
-            </div>
-          );
-        })}
+        {widgets.map((w) => (
+          <div
+            key={w.id}
+            data-grid={{
+              ...w.layout,
+              isDraggable: editMode,
+              isResizable: editMode,
+            }}
+            style={{
+              width: "auto",
+              height: "auto",
+            }}
+          >
+            <StatsWidget id={w.id} onRemove={removeWidget} />
+          </div>
+        ))}
       </ResponsiveGridLayout>
     </Box>
+  ) : (
+    <Alert severity="error" variant="outlined" sx={{ mt: 2 }}>
+      Není vybrán žádný klient. Pro zobrazení dashboardu prosím vyberte klienta.
+    </Alert>
   );
 };
 
-export default DashboardPage;
+export default StatsDashboardPage;

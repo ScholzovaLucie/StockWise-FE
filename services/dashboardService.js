@@ -111,20 +111,24 @@ export const getDashboardExtendedStats = async ({ clientId }) => {
 /**
  * Načíst konfiguraci widgetů uživatele.
  */
-export const getUserWidgets = async () => {
-  const response = await apiClient.get("/dashboard/my_widgets/", {
-    withCredentials: true,
-  });
+export const getUserWidgets = async (stats = false) => {
+  const response = await apiClient.get(
+    "/dashboard/my_widgets/",
+    {
+      params: { stats },
+    },
+    { withCredentials: true }
+  );
   return response.data;
 };
 
 /**
  * Uložit konfiguraci widgetů uživatele.
  */
-export const saveUserWidgets = async (widgets) => {
+export const saveUserWidgets = async (widgets, stats = false) => {
   const response = await apiClient.post(
     "/dashboard/save_widgets/",
-    { widgets },
+    { widgets, stats },
     { withCredentials: true }
   );
   return response.data;

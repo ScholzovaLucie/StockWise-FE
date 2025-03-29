@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import {
   TextField,
-  Button,
+  Alert,
   Box,
   Typography,
   Paper,
@@ -19,7 +19,10 @@ import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import chatbotService from "/services/chatbotService";
 import { useClient } from "/context/clientContext";
 import { useMessage } from "/context/messageContext";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import ReactMarkdown from "react-markdown";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Chatbot = () => {
   const [chatMessage, setChatMessage] = useState("");
@@ -29,6 +32,29 @@ const Chatbot = () => {
   const { selectedClient } = useClient();
   const { setMessage } = useMessage();
   const theme = useTheme();
+  const [dragging, setDragging] = useState(false);
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(true); // pokud ho opravdu potřebuješ
+
+  const handleFileSelect = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    setDragging(false);
+    const droppedFile = event.dataTransfer.files[0];
+    if (droppedFile) {
+      setFile(droppedFile);
+    }
+  };
+
+  const handleClick = () => {
+    document.getElementById("file-upload").click();
+  };
 
   useEffect(() => {
     loadChatHistory();
@@ -49,9 +75,12 @@ const Chatbot = () => {
   };
 
   const sendMessage = async () => {
-    if (!selectedClient || !chatMessage) return;
+    if (!selectedClient || (!chatMessage && !file)) return;
 
-    const userMessage = { role: "user", content: chatMessage };
+    const userMessage = {
+      role: "user",
+      content: chatMessage || (file && `📎 ${file.name}`),
+    };
     setMessages((prev) => [...prev, userMessage]);
     setChatMessage("");
     setBotTyping(true);
@@ -59,11 +88,14 @@ const Chatbot = () => {
     try {
       const botResponse = await chatbotService.sendMessage(
         chatMessage,
-        selectedClient
+        selectedClient,
+        file // přidáme soubor do requestu
       );
 
+      setFile(null); // reset souboru po odeslání
+
       setTimeout(() => {
-        setMessages((prev) => [...botResponse]);
+        setMessages(botResponse);
         setBotTyping(false);
       });
     } catch (error) {
@@ -102,9 +134,9 @@ const Chatbot = () => {
   return (
     <Box sx={{ height: "100%" }}>
       {!selectedClient ? (
-        <Typography color="error" sx={{ textAlign: "center" }}>
+        <Alert severity="error" variant="outlined" sx={{ mt: 2 }}>
           Chyba: Není vybrán žádný klient. Vyberte klienta pro pokračování.
-        </Typography>
+        </Alert>
       ) : (
         <Card sx={{ height: "100%", p: 2, boxShadow: 3, borderRadius: 2 }}>
           <CardContent sx={{ height: "90%" }}>
@@ -150,15 +182,15 @@ const Chatbot = () => {
                     <Typography
                       sx={{
                         textAlign:
-                          (msg.role === "user") | msg?.class?.includes("user")
+                          msg.role === "user" || msg?.class?.includes("user")
                             ? "right"
                             : "left",
                         bgcolor:
-                          (msg.role === "user") | msg?.class?.includes("user")
+                          msg.role === "user" || msg?.class?.includes("user")
                             ? theme.palette.primary.main
                             : "#e0e0e0",
                         color:
-                          (msg.role === "user") | msg?.class?.includes("user")
+                          msg.role === "user" || msg?.class?.includes("user")
                             ? "#fff"
                             : "#000",
                         p: 1.5,
@@ -166,7 +198,7 @@ const Chatbot = () => {
                         mb: 1,
                         maxWidth: "80%",
                         ml:
-                          (msg.role === "user") | msg?.class?.includes("user")
+                          msg.role === "user" || msg?.class?.includes("user")
                             ? "auto"
                             : 0,
                       }}
@@ -233,21 +265,101 @@ const Chatbot = () => {
               <div ref={messagesEndRef} />
             </Paper>
 
-            <Box sx={{ alignSelf: "end", justifySelf: "end" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "end",
+                gap: 2,
+                width: "100%",
+              }}
+            >
               <TextField
                 label="Napište zprávu..."
                 variant="outlined"
                 value={chatMessage}
                 onChange={(e) => setChatMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                sx={{ width: "90%" }}
+                sx={{ width: "80%" }}
               />
+
               <IconButton color="primary" onClick={sendMessage}>
                 <SendRoundedIcon fontSize="large" />
               </IconButton>
               <IconButton color="error" onClick={resetChat}>
                 <RestartAltRoundedIcon fontSize="large" />
               </IconButton>
+
+              <Box
+                sx={{
+                  width: "20%",
+                  display: "flex",
+                  textAlign: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  gap: 2,
+                }}
+              >
+                <Paper
+                  sx={{
+                    p: 2,
+                    border: "2px dashed",
+                    borderColor: dragging ? "primary.main" : "grey.400",
+                    borderRadius: 2,
+                    cursor: "pointer",
+                    transition: "0.3s",
+                    "&:hover": { borderColor: "primary.main" },
+                    backgroundColor: dragging ? "primary.light" : "inherit",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setDragging(true);
+                  }}
+                  onDragLeave={() => setDragging(false)}
+                  onDrop={handleDrop}
+                  onClick={!file ? handleClick : undefined}
+                >
+                  {file ? (
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <InsertDriveFileIcon color="primary" fontSize="large" />
+                      <Typography variant="body1" noWrap maxWidth="100px">
+                        {file.name}
+                      </Typography>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setFile(null);
+                        }}
+                      >
+                        ❌
+                      </IconButton>
+                    </Box>
+                  ) : (
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                    >
+                      <CloudUploadIcon color="primary" fontSize="large" />
+                      <Typography variant="caption" color="textSecondary">
+                        (CSV, XLSX)
+                      </Typography>
+                    </Box>
+                  )}
+                </Paper>
+
+                <input
+                  type="file"
+                  onChange={handleFileSelect}
+                  accept=".csv, .xlsx"
+                  style={{ display: "none" }}
+                  id="file-upload"
+                />
+              </Box>
             </Box>
           </CardContent>
         </Card>
