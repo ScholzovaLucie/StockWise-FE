@@ -1,6 +1,16 @@
 {
     "compilerOptions": {
-        "baseUrl": "."
+      "baseUrl": ".",
+      "paths": {
+        "/app/*": ["app/*"],
+        "/components/*": ["components/*"],
+        "/context/*": ["context/*"],
+        "/models/*": ["models/*"],
+        "/services/*": ["services/*"],
+        "/styles/*": ["styles/*"],
+        "/theme/*": ["theme/*"],
+        "/public/*": ["public/*"]
+      }
     },
-    "include": ["app"]
-}
+    "include": ["."]
+  }
