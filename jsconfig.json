@@ -8,8 +8,7 @@
         "/models/*": ["models/*"],
         "/services/*": ["services/*"],
         "/styles/*": ["styles/*"],
-        "/theme/*": ["theme/*"],
-        "/public/*": ["public/*"]
+        "/theme/*": ["theme/*"]
       }
     },
     "include": ["."]
