@@ -2,7 +2,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL:
+    "https://stockwise-be-production-7684.up.railway.app" /*"http://localhost:8000/api",*/,
   withCredentials: true, // Používáme cookies pro tokeny
 });
 
