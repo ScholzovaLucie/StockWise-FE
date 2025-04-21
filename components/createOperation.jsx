@@ -10,12 +10,12 @@ import {
   Divider,
   IconButton,
 } from "@mui/material";
-import operationService from "/services/operationService";
-import clientService from "/services/clientService";
-import productService from "/services/productService";
+import operationService from "services/operationService";
+import clientService from "services/clientService";
+import productService from "services/productService";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRouter } from "next/navigation";
-import { useMessage } from "/context/messageContext";
+import { useMessage } from "context/messageContext";
 
 const OperationForm = ({ operationId = null }) => {
   const router = useRouter();

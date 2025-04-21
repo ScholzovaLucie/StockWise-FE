@@ -1,8 +1,8 @@
 "use client";
 
-import EntityDetail from "/components/entityDetail";
-import batchService from "/services/batchService";
-import productService from "/services/productService";
+import EntityDetail from "components/entityDetail";
+import batchService from "services/batchService";
+import productService from "services/productService";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import CircularProgress from "@mui/material/CircularProgress";

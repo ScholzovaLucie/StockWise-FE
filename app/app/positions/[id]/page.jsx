@@ -1,8 +1,8 @@
 "use client";
 
-import EntityDetail from "/components/entityDetail";
-import positionService from "/services/positionService";
-import warehouseService from "/services/warehouseService";
+import EntityDetail from "components/entityDetail";
+import positionService from "services/positionService";
+import warehouseService from "services/warehouseService";
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import CircularProgress from "@mui/material/CircularProgress";

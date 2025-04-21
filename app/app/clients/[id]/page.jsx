@@ -1,7 +1,7 @@
 "use client";
 
-import clientService from "/services/clientService";
-import EntityDetail from "/components/entityDetail";
+import clientService from "services/clientService";
+import EntityDetail from "components/entityDetail";
 
 const ClientDetail = () => {
   const fields = [

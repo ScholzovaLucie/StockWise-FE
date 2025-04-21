@@ -8,7 +8,7 @@ import {
   useColorScheme,
 } from "@mui/material";
 import { useRouter } from "next/navigation"; // nebo použij react-router-dom, pokud jsi přešel na čistý React
-import { logout } from "/services/authService";
+import { logout } from "services/authService";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";

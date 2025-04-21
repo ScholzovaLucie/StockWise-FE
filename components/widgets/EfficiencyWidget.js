@@ -1,4 +1,4 @@
-import { getDashboardEfficiency } from "/services/dashboardService";
+import { getDashboardEfficiency } from "services/dashboardService";
 import { useEffect, useState } from "react";
 import {
   Box,
@@ -7,7 +7,7 @@ import {
   Paper,
   Divider,
 } from "@mui/material";
-import { useClient } from "/context/clientContext";
+import { useClient } from "context/clientContext";
 
 const EfficiencyWidget = () => {
   const [efficiencyData, setEfficiencyData] = useState(null);

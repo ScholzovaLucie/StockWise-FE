@@ -1,9 +1,9 @@
-import { getDashboardLowStock } from "/services/dashboardService";
+import { getDashboardLowStock } from "services/dashboardService";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Paper, Typography } from "@mui/material";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import { useClient } from "/context/clientContext";
+import { useClient } from "context/clientContext";
 import { useTheme } from "@mui/material";
 
 const LowStockWidget = () => {

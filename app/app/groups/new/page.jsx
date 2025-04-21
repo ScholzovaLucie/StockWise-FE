@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import groupService from "/services/groupService";
-import boxService from "/services/boxService";
-import batchService from "/services/batchService";
-import NewEntityForm from "/components/newEntityForm";
+import groupService from "services/groupService";
+import boxService from "services/boxService";
+import batchService from "services/batchService";
+import NewEntityForm from "components/newEntityForm";
 
 const NewGroup = () => {
   const [selectFields, setSelectFields] = useState([]);

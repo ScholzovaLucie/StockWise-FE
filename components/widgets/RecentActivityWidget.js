@@ -1,4 +1,4 @@
-import { getDashboardRecentActivity } from "/services/dashboardService";
+import { getDashboardRecentActivity } from "services/dashboardService";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -19,7 +19,7 @@ import {
   InputLabel,
   TextField,
 } from "@mui/material";
-import { useClient } from "/context/clientContext";
+import { useClient } from "context/clientContext";
 
 // 🔧 Registrace komponent pro Chart.js
 ChartJS.register(

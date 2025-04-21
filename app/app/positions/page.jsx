@@ -1,9 +1,9 @@
 "use client";
 
-import positionService from "/services/positionService";
-import EntityList from "/components/entityList";
+import positionService from "services/positionService";
+import EntityList from "components/entityList";
 import { Button, Tooltip } from "@mui/material";
-import { useRouter , useSearchParams} from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Positions = () => {
   const router = useRouter();
@@ -17,31 +17,38 @@ const Positions = () => {
       headerName: "Krabice",
       width: 100,
       renderCell: (params) => {
-        return(
-        <Tooltip title={params.row.boxes.search}>
-          <Button
-            onClick={() => {
-              router.push(`/app/operations?search=${params.row.boxes.search}`)}}
-            color="primary"
-          >
-            {params.row.boxes.count}
-          </Button>
-        </Tooltip>
-      )},
+        return (
+          <Tooltip title={params.row.boxes.search}>
+            <Button
+              onClick={() => {
+                router.push(
+                  `/app/operations?search=${params.row.boxes.search}`
+                );
+              }}
+              color="primary"
+            >
+              {params.row.boxes.count}
+            </Button>
+          </Tooltip>
+        );
+      },
     },
     {
       field: "warehouse_name",
       headerName: "Sklad",
       flex: 1,
       renderCell: (params) => {
-        return(
-        <Button
-          onClick={() => router.push(`/app/warehouse?search=${params.row.warehouse_name}`)}
-          color="primary"
-        >
-          {params.row.warehouse_name}
-        </Button>
-      )},
+        return (
+          <Button
+            onClick={() =>
+              router.push(`/app/warehouse?search=${params.row.warehouse_name}`)
+            }
+            color="primary"
+          >
+            {params.row.warehouse_name}
+          </Button>
+        );
+      },
     },
   ];
 

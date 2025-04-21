@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { useClient } from "/context/clientContext";
-import clientService from "/services/clientService";
-import { useMessage } from "/context/messageContext";
+import { useClient } from "context/clientContext";
+import clientService from "services/clientService";
+import { useMessage } from "context/messageContext";
 import CircularProgress from "@mui/material/CircularProgress";
 
 export default function ClientSelector() {

@@ -12,7 +12,7 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
-import { requestPasswordReset } from "/services/authService";
+import { requestPasswordReset } from "services/authService";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");

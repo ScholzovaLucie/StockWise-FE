@@ -1,12 +1,11 @@
 "use client";
 
-import groupService from "/services/groupService";
-import EntityList from "/components/entityList";
+import groupService from "services/groupService";
+import EntityList from "components/entityList";
 import { Button, Tooltip } from "@mui/material";
-import { useRouter , useSearchParams} from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-
 
 const Groups = () => {
   const router = useRouter();
@@ -21,28 +20,34 @@ const Groups = () => {
       headerName: "Krabice",
       width: 150,
       renderCell: (params) => {
-        return(
-        <Button
-          onClick={() => router.push(`/app/boxes?search=${params.row.box_ean}`)}
-          color="primary"
-        >
-          {params.value}
-        </Button>
-      )},
+        return (
+          <Button
+            onClick={() =>
+              router.push(`/app/boxes?search=${params.row.box_ean}`)
+            }
+            color="primary"
+          >
+            {params.value}
+          </Button>
+        );
+      },
     },
     {
       field: "product_name",
       headerName: "Produkt",
       width: 100,
       renderCell: (params) => {
-        return(
-        <Button
-          onClick={() => router.push(`/app/products?search=${params.row.product_name}`)}
-          color="primary"
-        >
-          {params.row.product_name}
-        </Button>
-      )},
+        return (
+          <Button
+            onClick={() =>
+              router.push(`/app/products?search=${params.row.product_name}`)
+            }
+            color="primary"
+          >
+            {params.row.product_name}
+          </Button>
+        );
+      },
     },
     {
       field: "operations_in",
@@ -53,7 +58,9 @@ const Groups = () => {
           <Tooltip title={params.row.operations_in.search}>
             <Button
               onClick={() => {
-                router.push(`/app/operations?search=${params.row.operations_in.search}`);
+                router.push(
+                  `/app/operations?search=${params.row.operations_in.search}`
+                );
               }}
               color="primary"
               startIcon={<ArrowDownwardIcon sx={{ color: "green" }} />} // 📥 Příjemka (zelená šipka dolů)
@@ -73,7 +80,9 @@ const Groups = () => {
           <Tooltip title={params.row.operations_out.search}>
             <Button
               onClick={() => {
-                router.push(`/app/operations?search=${params.row.operations_out.search}`);
+                router.push(
+                  `/app/operations?search=${params.row.operations_out.search}`
+                );
               }}
               color="primary"
               startIcon={<ArrowUpwardIcon sx={{ color: "red" }} />} // 📤 Výdejka (červená šipka nahoru)

@@ -14,11 +14,11 @@ import {
   MenuItem,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import LoadingScreen from "/components/loadingScreen";
+import LoadingScreen from "components/loadingScreen";
 import TextFieldComponent from "components/textFieldComponent";
 import NumberFieldComponent from "components/numberFieldComponent";
 import DateFieldComponent from "components/dateFieldComponent";
-import { useMessage } from "/context/messageContext";
+import { useMessage } from "context/messageContext";
 
 const EntityDetail = ({
   title,

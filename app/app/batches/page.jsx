@@ -1,14 +1,13 @@
 "use client";
 
-import batchService from "/services/batchService";
-import EntityList from "/components/entityList";
-import { useRouter , useSearchParams} from "next/navigation";
+import batchService from "services/batchService";
+import EntityList from "components/entityList";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button, Tooltip } from "@mui/material";
-
 
 const Products = () => {
   const router = useRouter();
-  const searchParams = useSearchParams(); 
+  const searchParams = useSearchParams();
   const search = searchParams.get("search");
 
   const columns = [
@@ -18,14 +17,17 @@ const Products = () => {
       headerName: "Produkt",
       flex: 1,
       renderCell: (params) => {
-        return(
+        return (
           <Button
-            onClick={() => router.push(`/app/products?search=${params.row.product_name}`)}
+            onClick={() =>
+              router.push(`/app/products?search=${params.row.product_name}`)
+            }
             color="primary"
           >
             {params.value}
           </Button>
-      )},
+        );
+      },
     },
     { field: "expiration_date", headerName: "Expirace", flex: 1 },
   ];

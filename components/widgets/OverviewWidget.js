@@ -1,4 +1,4 @@
-import { getDashboardOverview } from "/services/dashboardService";
+import { getDashboardOverview } from "services/dashboardService";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Paper, Typography } from "@mui/material";
@@ -8,7 +8,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import WarehouseIcon from "@mui/icons-material/Warehouse";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
-import { useClient } from "/context/clientContext";
+import { useClient } from "context/clientContext";
 import { useTheme } from "@mui/material";
 
 const OverviewWidget = () => {

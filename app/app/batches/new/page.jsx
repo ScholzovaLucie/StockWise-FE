@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import productService from "/services/productService";
-import batchService from "/services/batchService";
-import NewEntityForm from "/components/newEntityForm";
+import productService from "services/productService";
+import batchService from "services/batchService";
+import NewEntityForm from "components/newEntityForm";
 
 const NewBatch = () => {
   const [selectFields, setSelectFields] = useState([]);

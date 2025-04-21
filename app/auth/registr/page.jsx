@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { registerUser } from "/services/authService";
-import { useAuth } from "/context/authContext";
+import { registerUser } from "services/authService";
+import { useAuth } from "context/authContext";
 import { useRouter } from "next/navigation";
 import {
   TextField,

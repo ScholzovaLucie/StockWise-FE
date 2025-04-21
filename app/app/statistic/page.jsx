@@ -15,10 +15,10 @@ import {
   Alert,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import StatsWidget from "/components/statsWidget";
+import StatsWidget from "components/statsWidget";
 import STAT_LABELS from "/constants";
-import { getUserWidgets, saveUserWidgets } from "/services/dashboardService";
-import { useClient } from "/context/clientContext";
+import { getUserWidgets, saveUserWidgets } from "services/dashboardService";
+import { useClient } from "context/clientContext";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 

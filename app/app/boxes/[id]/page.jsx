@@ -1,8 +1,8 @@
 "use client";
 
-import EntityDetail from "/components/entityDetail";
-import boxService from "/services/boxService";
-import positionService from "/services/positionService";
+import EntityDetail from "components/entityDetail";
+import boxService from "services/boxService";
+import positionService from "services/positionService";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import CircularProgress from "@mui/material/CircularProgress";

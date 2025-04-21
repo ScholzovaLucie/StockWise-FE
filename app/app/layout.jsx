@@ -6,13 +6,13 @@ import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, Snackbar } from "@mui/material";
 import { lightTheme, darkTheme } from "/theme/theme";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
-import UserSection from "/components/UserSection";
+import UserSection from "components/UserSection";
 import { usePathname, useRouter } from "next/navigation";
-import { ClientProvider } from "/context/clientContext"; // Import ClientProvider
-import { MessageProvider, useMessage } from "/context/messageContext";
-import ClientSelector from "/components/clientSelector";
+import { ClientProvider } from "context/clientContext"; // Import ClientProvider
+import { MessageProvider, useMessage } from "context/messageContext";
+import ClientSelector from "components/clientSelector";
 import LayoutWrapper from "./LayoutWrapper";
-import RouteTracker from "/context/routerTracker";
+import RouteTracker from "context/routerTracker";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import RestoreIcon from "@mui/icons-material/Restore";
 import {

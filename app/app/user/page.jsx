@@ -9,12 +9,12 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { logout, fetchCurrentUser } from "/services/authService";
-import clientService from "/services/clientService";
-import userSrvices from "/services/userSrvices";
+import { logout, fetchCurrentUser } from "services/authService";
+import clientService from "services/clientService";
+import userSrvices from "services/userSrvices";
 import { useRouter } from "next/navigation"; // Import routeru
-import { useMessage } from "/context/messageContext";
-import { useClient } from "/context/clientContext";
+import { useMessage } from "context/messageContext";
+import { useClient } from "context/clientContext";
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);

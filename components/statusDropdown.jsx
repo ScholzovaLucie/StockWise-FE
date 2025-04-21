@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { MenuItem, Select, CircularProgress } from "@mui/material";
-import operationService from "/services/operationService";
-import { useMessage } from "/context/messageContext";
+import operationService from "services/operationService";
+import { useMessage } from "context/messageContext";
 
 const StatusDropdown = ({ operationId, currentStatus, onUpdate, statuses }) => {
   const [status, setStatus] = useState(currentStatus ?? "");

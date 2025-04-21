@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import positionService from "/services/positionService";
-import warehouseService from "/services/warehouseService";
-import NewEntityForm from "/components/newEntityForm";
+import positionService from "services/positionService";
+import warehouseService from "services/warehouseService";
+import NewEntityForm from "components/newEntityForm";
 
 const NewPosition = () => {
   const [selectFields, setSelectFields] = useState([]);

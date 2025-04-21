@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import OperationForm from "/components/createOperation";
+import OperationForm from "components/createOperation";
 
 const OperationPage = () => {
   return (

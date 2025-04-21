@@ -15,8 +15,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import debounce from "lodash.debounce";
-import { useClient } from "/context/clientContext";
-import { useMessage } from "/context/messageContext";
+import { useClient } from "context/clientContext";
+import { useMessage } from "context/messageContext";
 
 const EntityList = ({
   title,

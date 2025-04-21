@@ -9,11 +9,11 @@ import {
   TimelineOppositeContent,
 } from "@mui/lab";
 import { Paper, Typography, CircularProgress, Box } from "@mui/material";
-import historyService from "/services/historyService";
-import operationService from "/services/operationService";
-import productService from "/services/productService";
-import positionService from "/services/positionService";
-import batchService from "/services/batchService";
+import historyService from "services/historyService";
+import operationService from "services/operationService";
+import productService from "services/productService";
+import positionService from "services/positionService";
+import batchService from "services/batchService";
 import { format } from "date-fns";
 import {
   Inventory2 as ProductIcon,
@@ -22,7 +22,7 @@ import {
   Groups as GroupIcon,
   LocationOn as PositionIcon,
 } from "@mui/icons-material";
-import groupService from "/services/groupService";
+import groupService from "services/groupService";
 
 const typeMap = {
   operation: { label: "Operace", icon: <OperationIcon />, color: "primary" },

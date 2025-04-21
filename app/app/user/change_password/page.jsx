@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography, Alert } from "@mui/material";
 import { changePassword } from "services/authService";
-import { useMessage } from "/context/messageContext";
+import { useMessage } from "context/messageContext";
 
 const ChangePasswordForm = () => {
   const [oldPassword, setOldPassword] = useState("");

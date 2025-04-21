@@ -1,9 +1,8 @@
 "use client";
 
 import React from "react";
-import OperationForm from "/components/createOperation";
+import OperationForm from "components/createOperation";
 import { useParams } from "next/navigation";
-
 
 const DetailOperationPage = () => {
   const { id } = useParams();

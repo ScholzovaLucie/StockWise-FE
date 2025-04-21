@@ -1,4 +1,4 @@
-import { getDashboardStats } from "/services/dashboardService";
+import { getDashboardStats } from "services/dashboardService";
 import { useEffect, useState } from "react";
 import {
   Paper,
@@ -19,7 +19,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { useClient } from "/context/clientContext";
+import { useClient } from "context/clientContext";
 
 // 🔧 Registrace Chart.js komponent
 ChartJS.register(

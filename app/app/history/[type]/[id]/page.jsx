@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import HistoryTimeline from "/components/historyTimeline";
+import HistoryTimeline from "components/historyTimeline";
 import { Typography, Box } from "@mui/material";
 
 export default function HistoryPage() {

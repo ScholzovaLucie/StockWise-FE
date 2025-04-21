@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import operationService from "/services/operationService";
-import boxService from "/services/boxService";
+import operationService from "services/operationService";
+import boxService from "services/boxService";
 import DeleteIcon from "@mui/icons-material/Delete";
-import groupService from "/services/groupService";
+import groupService from "services/groupService";
 import {
   TextField,
   Table,
@@ -22,7 +22,7 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
-import { useMessage } from "/context/messageContext";
+import { useMessage } from "context/messageContext";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const PackingPage = () => {

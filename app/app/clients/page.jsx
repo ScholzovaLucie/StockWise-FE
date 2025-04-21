@@ -1,7 +1,7 @@
 "use client";
 
-import clientService from "/services/clientService";
-import EntityList  from "/components/entityList";
+import clientService from "services/clientService";
+import EntityList from "components/entityList";
 
 const Clients = () => {
   const columns = [

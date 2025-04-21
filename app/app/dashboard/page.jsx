@@ -17,16 +17,16 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { getUserWidgets, saveUserWidgets } from "/services/dashboardService";
+import { getUserWidgets, saveUserWidgets } from "services/dashboardService";
 
-import ActiveOperationsWidget from "/components/widgets/ActiveOperationsWidget";
-import EfficiencyWidget from "/components/widgets/EfficiencyWidget";
-import ExtendedStatsWidget from "/components/widgets/ExtendedStatsWidget";
-import LowStockWidget from "/components/widgets/LowStockWidget";
-import RecentActivityWidget from "/components/widgets/RecentActivityWidget";
-import OverviewWidget from "/components/widgets/OverviewWidget";
-import StatsWidget from "/components/widgets/StatsWidget";
-import { useClient } from "/context/clientContext";
+import ActiveOperationsWidget from "components/widgets/ActiveOperationsWidget";
+import EfficiencyWidget from "components/widgets/EfficiencyWidget";
+import ExtendedStatsWidget from "components/widgets/ExtendedStatsWidget";
+import LowStockWidget from "components/widgets/LowStockWidget";
+import RecentActivityWidget from "components/widgets/RecentActivityWidget";
+import OverviewWidget from "components/widgets/OverviewWidget";
+import StatsWidget from "components/widgets/StatsWidget";
+import { useClient } from "context/clientContext";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { Stack } from "@mui/material";
-import UserInfo from "/components/userInfo";
-import { useAuth } from "/context/authContext";
+import UserInfo from "components/userInfo";
+import { useAuth } from "context/authContext";
 
 function UserSection({ mode, setMode }) {
   const { user, logout } = useAuth();

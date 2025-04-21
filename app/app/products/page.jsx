@@ -1,7 +1,7 @@
 "use client";
 
-import productService from "/services/productService";
-import EntityList from "/components/entityList";
+import productService from "services/productService";
+import EntityList from "components/entityList";
 import { Button, Tooltip, IconButton } from "@mui/material";
 import HistoryIcon from "@mui/icons-material/History";
 import { useRouter, useSearchParams } from "next/navigation";

@@ -13,7 +13,7 @@ import {
   Alert,
   CircularProgress,
 } from "@mui/material";
-import { resetPassword } from "/services/authService";
+import { resetPassword } from "services/authService";
 
 export default function ResetPasswordPage() {
   const params = useSearchParams();

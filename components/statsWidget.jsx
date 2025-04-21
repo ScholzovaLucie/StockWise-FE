@@ -7,10 +7,10 @@ import { Typography, Paper, IconButton, CircularProgress } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ReactMarkdown from "react-markdown";
 
-import chatbotService from "/services/chatbotService";
-import { useClient } from "/context/clientContext";
+import chatbotService from "services/chatbotService";
+import { useClient } from "context/clientContext";
 import STAT_LABELS from "/constants";
-import MarkdownRenderer from "/components/MarkdownRenderer";
+import MarkdownRenderer from "components/MarkdownRenderer";
 
 /**
  * @param {{ id: string, onRemove: (id: string) => void }} props

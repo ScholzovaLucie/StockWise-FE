@@ -1,10 +1,10 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
-import historyService from "/services/historyService";
-import EntityList from "/components/entityList";
+import historyService from "services/historyService";
+import EntityList from "components/entityList";
 import { IconButton, Button, Tooltip, CircularProgress } from "@mui/material";
-import { useMessage } from "/context/messageContext";
+import { useMessage } from "context/messageContext";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
 const History = () => {

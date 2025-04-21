@@ -1,10 +1,10 @@
 "use client";
 
-import productService from "/services/productService";
-import clientService from "/services/clientService";
-import NewEntityForm from "/components/newEntityForm";
+import productService from "services/productService";
+import clientService from "services/clientService";
+import NewEntityForm from "components/newEntityForm";
 import { useEffect, useState } from "react";
-import { useClient } from "/context/clientContext";
+import { useClient } from "context/clientContext";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const NewProduct = () => {

@@ -1,7 +1,7 @@
 "use client";
 
-import clientService from "/services/clientService";
-import NewEntityForm from "/components/newEntityForm";
+import clientService from "services/clientService";
+import NewEntityForm from "components/newEntityForm";
 
 const NewClient = () => {
   const fields = [

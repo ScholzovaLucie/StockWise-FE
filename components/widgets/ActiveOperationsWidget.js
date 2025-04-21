@@ -1,8 +1,8 @@
-import { getDashboardActiveOperations } from "/services/dashboardService";
+import { getDashboardActiveOperations } from "services/dashboardService";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Paper, Typography } from "@mui/material";
-import { useClient } from "/context/clientContext";
+import { useClient } from "context/clientContext";
 import { useTheme } from "@mui/material";
 
 // 🏷 Funkce pro barevné označení stavů operací

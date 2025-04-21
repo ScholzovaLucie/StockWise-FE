@@ -1,9 +1,9 @@
 "use client";
 
-import warehouseService from "/services/warehouseService";
-import EntityList from "/components/entityList";
+import warehouseService from "services/warehouseService";
+import EntityList from "components/entityList";
 import { Button, Tooltip } from "@mui/material";
-import { useRouter , useSearchParams} from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Positions = () => {
   const router = useRouter();
@@ -21,14 +21,19 @@ const Positions = () => {
       headerName: "pozice",
       width: 150,
       renderCell: (params) => {
-        return(
-        <Button
-          onClick={() => router.push(`/app/positions?search=${params.row.positions.search}`)}
-          color="primary"
-        >
-          {params.row.positions.count}
-        </Button>
-      )},
+        return (
+          <Button
+            onClick={() =>
+              router.push(
+                `/app/positions?search=${params.row.positions.search}`
+              )
+            }
+            color="primary"
+          >
+            {params.row.positions.count}
+          </Button>
+        );
+      },
     },
   ];
 

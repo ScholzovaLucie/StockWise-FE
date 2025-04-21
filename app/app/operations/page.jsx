@@ -1,15 +1,15 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
-import operationService from "/services/operationService";
-import EntityList from "/components/entityList";
-import StatusDropdown from "/components/statusDropdown";
+import operationService from "services/operationService";
+import EntityList from "components/entityList";
+import StatusDropdown from "components/statusDropdown";
 import { IconButton, Button, Tooltip, CircularProgress } from "@mui/material";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import HistoryIcon from "@mui/icons-material/History";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { useMessage } from "/context/messageContext";
+import { useMessage } from "context/messageContext";
 
 const Operations = () => {
   const router = useRouter();
