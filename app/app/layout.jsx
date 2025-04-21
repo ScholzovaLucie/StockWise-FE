@@ -6,7 +6,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, Snackbar } from "@mui/material";
 import { lightTheme, darkTheme } from "/theme/theme";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
-import UserSection from "components/UserSection";
+import UserSection from "components/userSection";
 import { usePathname, useRouter } from "next/navigation";
 import { ClientProvider } from "context/clientContext"; // Import ClientProvider
 import { MessageProvider, useMessage } from "context/messageContext";

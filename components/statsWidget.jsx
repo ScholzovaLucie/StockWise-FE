@@ -10,7 +10,7 @@ import ReactMarkdown from "react-markdown";
 import chatbotService from "services/chatbotService";
 import { useClient } from "context/clientContext";
 import STAT_LABELS from "/constants";
-import MarkdownRenderer from "components/MarkdownRenderer";
+import MarkdownRenderer from "components/markdownRenderer";
 
 /**
  * @param {{ id: string, onRemove: (id: string) => void }} props
