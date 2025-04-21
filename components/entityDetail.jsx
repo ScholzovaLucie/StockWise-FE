@@ -11,7 +11,7 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LoadingScreen from "/components/loadingScreen";
@@ -20,7 +20,13 @@ import NumberFieldComponent from "components/numberFieldComponent";
 import DateFieldComponent from "components/dateFieldComponent";
 import { useMessage } from "/context/messageContext";
 
-const EntityDetail = ({ title, service, fields, selectFields, redirectPath }) => {
+const EntityDetail = ({
+  title,
+  service,
+  fields,
+  selectFields,
+  redirectPath,
+}) => {
   const { id } = useParams();
   const router = useRouter();
   const [entity, setEntity] = useState(null);
@@ -52,7 +58,7 @@ const EntityDetail = ({ title, service, fields, selectFields, redirectPath }) =>
     };
 
     loadEntity();
-  }, [id, fetchUrl, fields, selectFields]);
+  }, [id, fields, selectFields]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -121,39 +127,54 @@ const EntityDetail = ({ title, service, fields, selectFields, redirectPath }) =>
             }
           })}
           {selectFields?.map((select) => (
-           <FormControl key={select.name} fullWidth sx={{ mb: 2 }} disabled={!isEditing}>
-           <InputLabel id={`${select.name}-label`}>{select.label}</InputLabel>
-           <Select
-            labelId={`${select.name}-label`}
-            name={select.name}
-            multiple={select.multiple}
-            value={formData[select.name] || (select.multiple ? [] : "")} // Oprava pro single select
-            onChange={handleChange}
-            renderValue={(selected) => {
-              if (select.multiple) {
-                return selected
-                  .map((value) => {
-                    const option = select.options.find((opt) => opt.id === value);
-                    return option ? option.name : "";
-                  })
-                  .join(", ");
-              } else {
-                const option = select.options.find((opt) => opt.id === selected);
-                return option ? option.name : ""; // Oprava pro single select
-              }
-            }}
-            label={select.label}
-          >
-            {select.options.map((option) => (
-              <MenuItem key={option.id} value={option.id}>
-                {option.name}
-              </MenuItem>
-            ))}
-          </Select>
-         </FormControl>
+            <FormControl
+              key={select.name}
+              fullWidth
+              sx={{ mb: 2 }}
+              disabled={!isEditing}
+            >
+              <InputLabel id={`${select.name}-label`}>
+                {select.label}
+              </InputLabel>
+              <Select
+                labelId={`${select.name}-label`}
+                name={select.name}
+                multiple={select.multiple}
+                value={formData[select.name] || (select.multiple ? [] : "")} // Oprava pro single select
+                onChange={handleChange}
+                renderValue={(selected) => {
+                  if (select.multiple) {
+                    return selected
+                      .map((value) => {
+                        const option = select.options.find(
+                          (opt) => opt.id === value
+                        );
+                        return option ? option.name : "";
+                      })
+                      .join(", ");
+                  } else {
+                    const option = select.options.find(
+                      (opt) => opt.id === selected
+                    );
+                    return option ? option.name : ""; // Oprava pro single select
+                  }
+                }}
+                label={select.label}
+              >
+                {select.options.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           ))}
           <Box display="flex" justifyContent="space-between">
-            <Button color="primary" onClick={() => setIsEditing(!isEditing)} variant="outlined">
+            <Button
+              color="primary"
+              onClick={() => setIsEditing(!isEditing)}
+              variant="outlined"
+            >
               {isEditing ? "Zrušit" : "Upravit"}
             </Button>
             {isEditing && (

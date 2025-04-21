@@ -21,11 +21,8 @@ export default function ClientSelector() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const data = await clientService.getAll();
-        setClients(data);
-        if (data.any((client) => client.id !== selectedClient)) {
-          setSelectedClient(null);
-        }
+        const data = await clientService.getAll({ no_page: 1 });
+        setClients(data?.resluts || data);
       } catch (error) {
         setMessage("Error loading data: " + error.message);
       } finally {

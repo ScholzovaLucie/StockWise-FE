@@ -20,8 +20,8 @@ const PositionDetail = () => {
     const loadData = async () => {
       try {
         const data = await positionService.getById(id);
-        const warehosues = await warehouseService.getAll();
-
+        let warehosues = await warehouseService.getAll();
+        if (warehosues.results) warehosues = warehosues.results;
         const warehouseOptions = warehosues.map((warehouse) => ({
           id: warehouse.id,
           name: warehouse.name,

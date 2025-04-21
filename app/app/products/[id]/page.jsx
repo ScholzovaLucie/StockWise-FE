@@ -23,7 +23,8 @@ const ProductDetail = () => {
     const loadData = async () => {
       try {
         const data = await productService.getById(id);
-        const clients = await clientService.getAll();
+        let clients = await clientService.getAll();
+        if (clients.results) clients = clients.results;
         const options = clients.map((client) => ({
           id: client.id,
           name: client.name, // Zde použij správné pole pro zobrazení názvu produktu

@@ -23,8 +23,8 @@ const BatchDetail = () => {
     const loadData = async () => {
       try {
         const data = await batchService.getById(id);
-        const products = await productService.getAll();
-
+        let products = await productService.getAll();
+        if (products.results) products = products.results;
         const productOptions = products.map((product) => ({
           id: product.id,
           name: product.name,

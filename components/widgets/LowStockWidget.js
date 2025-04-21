@@ -52,7 +52,7 @@ const LowStockWidget = () => {
               <Typography sx={{ fontWeight: "bold" }}>{row.name}</Typography>
             </Box>
             <Typography sx={{ color: "red", fontWeight: "bold" }}>
-              {row.amount}
+              {row.amount_cached}
             </Typography>
           </Box>
         ))

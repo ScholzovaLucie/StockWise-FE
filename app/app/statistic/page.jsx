@@ -76,7 +76,7 @@ const StatsDashboardPage = () => {
         }
 
         setWidgets(widgetsData);
-        console.log("layoutData", layoutData);
+        console.log("widgetsData", widgetsData);
         setLayouts(layoutData);
       })
       .catch(console.error);

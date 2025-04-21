@@ -16,7 +16,8 @@ const NewBatch = () => {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const products = await productService.getAll();
+        let products = await productService.getAll();
+        if (products.results) products = products.results;
         const options = products.map((product) => ({
           id: product.id,
           name: product.name, // Zde použij správné pole pro zobrazení názvu produktu

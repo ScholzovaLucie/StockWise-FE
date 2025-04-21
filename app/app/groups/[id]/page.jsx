@@ -24,8 +24,8 @@ const GroupDetail = () => {
     const loadData = async () => {
       try {
         const data = await groupService.getById(id);
-        const boxes = await boxService.getAll();
-
+        let boxes = await boxService.getAll();
+        if (boxes.results) boxes = boxes.results;
         const boxesOptions = boxes.map((box) => ({
           id: box.id,
           name: box.ean,
@@ -37,8 +37,8 @@ const GroupDetail = () => {
         );
         setProduct(boxData || null);
 
-        const batches = await batchService.getAll();
-
+        let batches = await batchService.getAll();
+        if (batches.results) batches = batches.results;
         const batchesOptions = batches.map((batch) => ({
           id: batch.id,
           name: batch.batch_number,

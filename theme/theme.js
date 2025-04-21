@@ -3,9 +3,9 @@ import { createTheme } from "@mui/material/styles";
 export const lightTheme = createTheme({
   palette: {
     mode: "light",
-    primary: { main: "#f89371", dark: "#f89371" }, // Tlumená šedozelená
+    primary: { main: "#fca658", dark: "#f56b36" }, // Tlumená šedozelená
     secondary: { main: "#3f322e", dark: "#BC6C25" }, // Přírodní béžová s teplým podtónem
-    background: { default: "#fcdbba", paper: "#fef5eb" }, // Teplá bílá s jemným šedým podtónem
+    background: { default: "#fff3ed", paper: "#fff3ed" }, // Teplá bílá s jemným šedým podtónem
     text: { primary: "#2F2F2F", secondary: "#5A5A5A" }, // Uhlově černá pro výbornou čitelnost
     success: { main: "#40916C" }, // Moderní tlumená zelená
     warning: { main: "#F4A261" }, // Světlejší oranžová

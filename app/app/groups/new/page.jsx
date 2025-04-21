@@ -14,13 +14,15 @@ const NewGroup = () => {
   useEffect(() => {
     const loadBoxes = async () => {
       try {
-        const boxes = await boxService.getAll();
+        let boxes = await boxService.getAll();
+        if (boxes.results) boxes = boxes.results;
         const boxOptions = boxes.map((box) => ({
           id: box.id,
           name: box.ean,
         }));
 
-        const batches = await batchService.getAll();
+        let batches = await batchService.getAll();
+        if (batches.results) batches = batches.results;
         const batchesOptions = batches.map((batch) => ({
           id: batch.id,
           name: batch.batch_number,

@@ -22,7 +22,6 @@ import { useMessage } from "/context/messageContext";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import ReactMarkdown from "react-markdown";
-import CircularProgress from "@mui/material/CircularProgress";
 
 const Chatbot = () => {
   const [chatMessage, setChatMessage] = useState("");
@@ -34,7 +33,6 @@ const Chatbot = () => {
   const theme = useTheme();
   const [dragging, setDragging] = useState(false);
   const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(true); // pokud ho opravdu potřebuješ
 
   const handleFileSelect = (event) => {
     const selectedFile = event.target.files[0];
@@ -68,6 +66,7 @@ const Chatbot = () => {
     if (!selectedClient) return;
     try {
       const history = await chatbotService.getHistory(selectedClient);
+      console.log(history);
       setMessages(history);
     } catch (error) {
       setMessage(error.message);
@@ -81,6 +80,7 @@ const Chatbot = () => {
       role: "user",
       content: chatMessage || (file && `📎 ${file.name}`),
     };
+    console.log(userMessage);
     setMessages((prev) => [...prev, userMessage]);
     setChatMessage("");
     setBotTyping(true);
@@ -95,7 +95,8 @@ const Chatbot = () => {
       setFile(null); // reset souboru po odeslání
 
       setTimeout(() => {
-        setMessages(botResponse);
+        console.log(botResponse);
+        setMessages((prev) => [...prev, botResponse]);
         setBotTyping(false);
       });
     } catch (error) {

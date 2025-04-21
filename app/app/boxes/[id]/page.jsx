@@ -54,8 +54,8 @@ const BoxDetail = () => {
     const loadData = async () => {
       try {
         const data = await boxService.getById(id);
-        const positions = await positionService.getAll();
-
+        let positions = await positionService.getAll();
+        if (positions.results) positions = positions.results;
         const positionOptions = positions.map((position) => ({
           id: position.id,
           name: position.code,

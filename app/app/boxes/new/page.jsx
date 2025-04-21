@@ -10,16 +10,45 @@ const NewBox = () => {
 
   const fields = [
     { name: "ean", label: "EAN", type: "text" },
-    { name: "width", label: "Width", type: "number", defaultValue: 0, step: 1, min: 0 },
-    { name: "height", label: "Height", type: "number", defaultValue: 0, step: 1, min: 0 },
-    { name: "depth", label: "Depth", type: "number", defaultValue: 0, step: 1, min: 0},
-    { name: "weight", label: "Weight", type: "number", defaultValue: 0, step: 1, min: 0 },
+    {
+      name: "width",
+      label: "Width",
+      type: "number",
+      defaultValue: 0,
+      step: 1,
+      min: 0,
+    },
+    {
+      name: "height",
+      label: "Height",
+      type: "number",
+      defaultValue: 0,
+      step: 1,
+      min: 0,
+    },
+    {
+      name: "depth",
+      label: "Depth",
+      type: "number",
+      defaultValue: 0,
+      step: 1,
+      min: 0,
+    },
+    {
+      name: "weight",
+      label: "Weight",
+      type: "number",
+      defaultValue: 0,
+      step: 1,
+      min: 0,
+    },
   ];
 
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const positions = await positionService.getAll();
+        let positions = await positionService.getAll();
+        if (positions.results) positions = positions.results;
         const options = positions.map((position) => ({
           id: position.id,
           name: position.code, // Zde použij správné pole pro zobrazení názvu produktu

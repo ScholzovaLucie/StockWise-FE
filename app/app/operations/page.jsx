@@ -6,6 +6,7 @@ import EntityList from "/components/entityList";
 import StatusDropdown from "/components/statusDropdown";
 import { IconButton, Button, Tooltip, CircularProgress } from "@mui/material";
 import InventoryIcon from "@mui/icons-material/Inventory";
+import HistoryIcon from "@mui/icons-material/History";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { useMessage } from "/context/messageContext";
@@ -68,7 +69,9 @@ const Operations = () => {
         renderCell: (params) => (
           <Tooltip title={params.row.groups_name}>
             <Button
-              onClick={() => router.push(`/app/groups?search=${params.row.groups_search}`)}
+              onClick={() =>
+                router.push(`/app/groups?search=${params.row.groups_search}`)
+              }
               color="primary"
             >
               {params.row.groups_amount}
@@ -83,7 +86,9 @@ const Operations = () => {
         renderCell: (params) => (
           <Tooltip title={params.row.product_search}>
             <Button
-              onClick={() => router.push(`/app/products?search=${params.row.product_search}`)}
+              onClick={() =>
+                router.push(`/app/products?search=${params.row.product_search}`)
+              }
               color="primary"
             >
               {params.row.product_amount}
@@ -102,6 +107,13 @@ const Operations = () => {
         color="primary"
       >
         <InventoryIcon />
+      </IconButton>,
+      <IconButton
+        key="history"
+        onClick={() => router.push(`history/operation/${params.row.id}`)}
+        color="info"
+      >
+        <HistoryIcon />
       </IconButton>,
     ],
     [router]

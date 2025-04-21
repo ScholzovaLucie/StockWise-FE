@@ -38,7 +38,7 @@ const OperationForm = ({ operationId = null }) => {
       try {
         setLoadingClients(true);
         const clientsResponse = await clientService.getAll();
-        setClients(clientsResponse || []);
+        setClients(clientsResponse?.results || clientsResponse || []);
       } catch (error) {
         console.error("Chyba při načítání klientů:", error);
       } finally {

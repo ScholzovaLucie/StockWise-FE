@@ -49,7 +49,7 @@ const UserProfile = () => {
 
     const loadClients = async () => {
       const clientList = await clientService.getAll({ all: true });
-      setClients(clientList);
+      setClients(clientList?.results || clientList);
     };
 
     loadUserData();

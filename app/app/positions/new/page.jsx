@@ -8,14 +8,13 @@ import NewEntityForm from "/components/newEntityForm";
 const NewPosition = () => {
   const [selectFields, setSelectFields] = useState([]);
 
-  const fields = [
-    { name: "code", label: "Code", type: "text" },
-  ];
+  const fields = [{ name: "code", label: "Code", type: "text" }];
 
   useEffect(() => {
     const loadWarehouses = async () => {
       try {
-        const warehosues = await warehouseService.getAll();
+        let warehosues = await warehouseService.getAll();
+        if (warehosues.results) warehosues = warehosues.results;
         const options = warehosues.map((warehouse) => ({
           id: warehouse.id,
           name: warehouse.name, // Zde použij správné pole pro zobrazení názvu produktu

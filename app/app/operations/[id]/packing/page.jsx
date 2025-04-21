@@ -72,7 +72,8 @@ const PackingPage = () => {
 
     const fetchBoxes = async () => {
       try {
-        const boxes = await boxService.getAll();
+        let boxes = await boxService.getAll();
+        if (boxes.results) boxes = boxes.results;
         setAvailableBoxes(boxes);
       } catch (error) {
         setMessage(`Chyba při načítání seznamu krabic: ${error}`);

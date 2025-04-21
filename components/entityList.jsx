@@ -1,12 +1,12 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   TextField,
   Box,
   Typography,
-  CircularProgress,
   Container,
   IconButton,
   Button,
@@ -27,6 +27,10 @@ const EntityList = ({
   viewPath,
   entityName = "položka",
   rowActions,
+  noAction = false,
+  extraToolbar = null,
+  filters = {},
+  filters_map = {},
 }) => {
   const [entities, setEntities] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -34,37 +38,75 @@ const EntityList = ({
   const router = useRouter();
   const { selectedClient } = useClient();
   const { setMessage } = useMessage();
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [rowCount, setRowCount] = useState(0);
+  const lastFetch = useRef("");
+  const fetchedOnce = useRef(false);
 
-  // ✅ Efektivnější debounce search (pouze 300ms)
-  const handleSearch = useCallback(
-    debounce(async (query) => {
+  const fetchEntities = useCallback(
+    async (query, page = 0, pageSize = 10) => {
       setLoading(true);
       try {
-        const data = query
-          ? await service.search(query)
-          : await service.getAll({ client_id: selectedClient });
-        setEntities(Array.isArray(data) ? data : []);
+        const params = {
+          client_id: selectedClient,
+          page: page + 1,
+          page_size: pageSize,
+        };
+
+        let data = null;
+
+        if (typeof filters === "string" && filters_map[filters]) {
+          console.log(filters);
+          console.log(filters_map[filters]);
+          data = await filters_map[filters](params); // 🟢 Tohle je OK
+          console.log(data);
+        } else if (query) {
+          data = await service.search(query, params);
+        } else {
+          data = await service.getAll(params);
+        }
+
+        setEntities(Array.isArray(data.results) ? data.results : []);
+        setRowCount(data.count || 0);
       } catch (error) {
-        setMessage(error?.message || `Nepodařilo se vyhledat ${entityName}y.`);
+        setMessage(error?.message || `Nepodařilo se načíst ${entityName}y.`);
       } finally {
         setLoading(false);
       }
+    },
+    [filters, filters_map, service, selectedClient, setMessage, entityName] // ✅ přidat závislosti
+  );
+
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      setPage(0);
+      setSearch(value);
     }, 300),
-    [selectedClient, service, entityName]
+    []
   );
 
   useEffect(() => {
-    handleSearch(search);
-  }, [search, selectedClient]);
+    fetchEntities(search, page, pageSize);
+  }, [page, pageSize]); // ✅ žádné search, jinak rušíš změnu filtru
 
-  // ✅ Zajistí, že searchData se synchronizuje správně
   useEffect(() => {
-    if (searchData !== undefined && searchData !== search) {
-      setSearch(searchData);
-    }
-  }, [searchData]);
+    console.log(filters);
+  }, [filters]); // ✅ žádné search, jinak rušíš změnu filtru
 
-  // ✅ Oprava handleDelete, aby se předešlo chybě
+  useEffect(() => {
+    if (search !== "") {
+      fetchEntities(search, page, pageSize);
+    }
+  }, [search]);
+
+  useEffect(() => {
+    if (!fetchedOnce.current) {
+      fetchEntities(search, page, pageSize);
+      fetchedOnce.current = true;
+    }
+  }, [selectedClient]);
+
   const handleDelete = async (id) => {
     if (!id) {
       setMessage(`Neplatné ID pro smazání ${entityName}.`);
@@ -82,15 +124,12 @@ const EntityList = ({
     }
   };
 
-  if (!entities && loading) {
-  }
-
-  if (entities) {
-    return (
-      <Container sx={{ height: "100%" }}>
-        <Typography variant="h4" sx={{ mb: 2 }}>
-          {title}
-        </Typography>
+  return (
+    <Container sx={{ height: "100%" }}>
+      <Typography variant="h4" sx={{ mb: 2 }}>
+        {title}
+      </Typography>
+      {!noAction ? (
         <Button
           sx={{ mb: 5 }}
           color="primary"
@@ -98,68 +137,72 @@ const EntityList = ({
           startIcon={<AddIcon />}
           onClick={() => router.push(addPath)}
         >
-          Nový {entityName}
+          Nový
         </Button>
-        <TextField
-          label={`Hledat ${entityName}`}
-          variant="outlined"
-          fullWidth
-          sx={{ mb: 2 }}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        {loading ? (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            height="200px"
-          >
-            <CircularProgress size={40} />
-          </Box>
-        ) : (
-          <Box sx={{ height: "75%", width: "100%" }}>
-            <DataGrid
-              rows={entities}
-              columns={[
-                ...columns,
-                {
-                  field: "actions",
-                  headerName: "Akce",
-                  width: 150,
-                  renderCell: (params) => {
-                    if (!params.row?.id) return null;
-                    return (
-                      <>
-                        <IconButton
-                          onClick={() =>
-                            router.push(`${viewPath}/${params.row.id}`)
-                          }
-                          color="primary"
-                        >
-                          <VisibilityIcon />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => handleDelete(params.row.id)}
-                          color="error"
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                        {rowActions &&
-                          rowActions(params)?.map((action, index) => (
-                            <span key={index}>{action}</span>
-                          ))}
-                      </>
-                    );
+      ) : null}
+      {extraToolbar && <Box sx={{ mb: 2 }}>{extraToolbar}</Box>}
+      <TextField
+        label={`Hledat`}
+        variant="outlined"
+        fullWidth
+        sx={{ mb: 2 }}
+        defaultValue={search}
+        onChange={(e) => debouncedSearch(e.target.value)}
+      />
+      <Box sx={{ height: "75%", width: "100%" }}>
+        <DataGrid
+          rows={entities}
+          loading={loading}
+          columns={[
+            ...columns,
+            ...(!noAction
+              ? [
+                  {
+                    field: "actions",
+                    headerName: "Akce",
+                    flex: 1,
+                    renderCell: (params) => {
+                      if (!params?.row?.id) return null;
+                      return (
+                        <>
+                          <IconButton
+                            onClick={() =>
+                              router.push(`${viewPath}/${params.row.id}`)
+                            }
+                            color="primary"
+                          >
+                            <VisibilityIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => handleDelete(params.row.id)}
+                            color="error"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                          {rowActions &&
+                            rowActions(params)?.map((action, index) => (
+                              <span key={index}>{action}</span>
+                            ))}
+                        </>
+                      );
+                    },
                   },
-                },
-              ]}
-            />
-          </Box>
-        )}
-      </Container>
-    );
-  }
+                ]
+              : []),
+          ]}
+          pageSizeOptions={[10, 25, 50, 100]}
+          pagination
+          paginationMode="server"
+          rowCount={rowCount}
+          paginationModel={{ page, pageSize }}
+          onPaginationModelChange={({ page, pageSize }) => {
+            setPage(page);
+            setPageSize(pageSize);
+          }}
+        />
+      </Box>
+    </Container>
+  );
 };
 
 export default EntityList;

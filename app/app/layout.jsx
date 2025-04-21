@@ -14,6 +14,7 @@ import ClientSelector from "/components/clientSelector";
 import LayoutWrapper from "./LayoutWrapper";
 import RouteTracker from "/context/routerTracker";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import RestoreIcon from "@mui/icons-material/Restore";
 import {
   DashboardRounded as DashboardIcon,
   Inventory2Rounded as InventoryIcon,
@@ -85,6 +86,12 @@ const NAVIGATION = [
     segment: "app/warehouse",
     title: "Sklad",
     icon: <WarehouseIcon color="primary" />,
+  },
+  { kind: "divider" },
+  {
+    segment: "app/history",
+    title: "Historie",
+    icon: <RestoreIcon color="primary" />,
   },
 ];
 

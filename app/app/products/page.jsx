@@ -2,13 +2,28 @@
 
 import productService from "/services/productService";
 import EntityList from "/components/entityList";
-import { Button, Tooltip } from "@mui/material";
+import { Button, Tooltip, IconButton } from "@mui/material";
+import HistoryIcon from "@mui/icons-material/History";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 
 const Products = () => {
   const router = useRouter();
   const searchParams = useSearchParams(); // Použití hooku pro získání query parametrů
   const search = searchParams.get("search");
+
+  const rowActions = useCallback(
+    (params) => [
+      <IconButton
+        key="history"
+        onClick={() => router.push(`history/product/${params.row.id}`)}
+        color="info"
+      >
+        <HistoryIcon />
+      </IconButton>,
+    ],
+    [router]
+  );
 
   const columns = [
     { field: "sku", headerName: "SKU", width: 120 },
@@ -66,6 +81,7 @@ const Products = () => {
       addPath="/app/products/new"
       viewPath="/app/products"
       entityName="produkt"
+      rowActions={rowActions}
     />
   );
 };

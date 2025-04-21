@@ -27,7 +27,8 @@ const NewProduct = () => {
     const loadProducts = async () => {
       try {
         setIsLoading(true);
-        const clients = await clientService.getAll(selectedClient);
+        let clients = await clientService.getAll(selectedClient);
+        if (clients.results) clients = clients.results;
         const options = clients.map((client) => ({
           id: client.id,
           name: client.name, // Zde použij správné pole pro zobrazení názvu produktu
