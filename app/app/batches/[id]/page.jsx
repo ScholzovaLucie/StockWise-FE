@@ -71,7 +71,7 @@ const BatchDetail = () => {
   return (
     <EntityDetail
       title="Detail šarže"
-      service={atchService}
+      service={batchService}
       selectFields={selectFields}
       fields={fields}
       redirectPath="/app/batches"

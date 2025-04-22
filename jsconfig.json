@@ -5,7 +5,6 @@
       "components/*": ["components/*"],
       "app/*": ["app/*"],
       "context/*": ["context/*"],
-      "models/*": ["models/*"],
       "services/*": ["services/*"],
       "styles/*": ["styles/*"],
       "theme/*": ["theme/*"]

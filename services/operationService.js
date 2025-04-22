@@ -1,12 +1,43 @@
-import createCRUDService from "./CRUDService";
-import apiClient from "./apiClient";
+import api from "./apiClient";
 
 const operationService = {
-  ...createCRUDService("operations"),
+  getAll: async (params = {}) => {
+    console.log("getall");
+    const response = await api.get(`/operations/all/`, { params });
+    return response.data;
+  },
+
+  getById: async (id) => {
+    const response = await api.get(`/operations/${id}/`);
+    return response.data;
+  },
+
+  create: async (data) => {
+    const response = await api.post(`/operations/`, data);
+    return response.data;
+  },
+
+  update: async (id, data) => {
+    const response = await api.put(`/operations/${id}/`, data);
+    return response.data;
+  },
+
+  delete: async (id) => {
+    const response = await api.delete(`/operations/${id}/remove/`);
+    return response.data;
+  },
+
+  search: async (query, extraParams = {}) => {
+    console.log("search");
+    const response = await api.get(`/operations/search/`, {
+      params: { q: query, ...extraParams },
+    });
+    return response.data;
+  },
 
   getStatuses: async () => {
     try {
-      const response = await apiClient.get("/operations/statuses");
+      const response = await api.get("/operations/statuses");
       return response.data;
     } catch (error) {
       throw new Error(
@@ -27,7 +58,7 @@ const operationService = {
   },
   addToBox: async (operationId, boxId, productId, quantity) => {
     try {
-      const response = await apiClient.post(
+      const response = await api.post(
         `/operations/${operationId}/add_to_box/`,
         { box_id: boxId, product_id: productId, quantity: quantity },
         { withCredentials: true }
@@ -43,7 +74,7 @@ const operationService = {
 
   getOperationProductSummary: async (operationId) => {
     try {
-      const response = await apiClient.get(
+      const response = await api.get(
         `/operations/${operationId}/product_summary/`
       );
       return response.data;
@@ -56,7 +87,7 @@ const operationService = {
 
   completeOperation: async (operationId) => {
     try {
-      const response = await apiClient.post(
+      const response = await api.post(
         `/operations/${operationId}/complete_packing/`,
         {},
         { withCredentials: true }
@@ -71,7 +102,7 @@ const operationService = {
 
   updateOperationStatus: async (operationId, newStatus) => {
     try {
-      const response = await apiClient.patch(
+      const response = await api.patch(
         `/operations/${operationId}/update_status/`,
         { status: newStatus },
         { withCredentials: true }
@@ -85,17 +116,14 @@ const operationService = {
   },
 
   startPackaging: async (id) => {
-    const response = await apiClient.post(
-      `/operations/${id}/start_packaging/`,
-      {
-        withCredentials: true,
-      }
-    );
+    const response = await api.post(`/operations/${id}/start_packaging/`, {
+      withCredentials: true,
+    });
     return response.data;
   },
 
   addToBox: async (id, selectedBox, productId, quantityToAdd) => {
-    const response = await apiClient.post(
+    const response = await api.post(
       `/operations/${id}/add_to_box/`,
       {
         box_id: selectedBox,
@@ -111,13 +139,9 @@ const operationService = {
 
   createOperation: async (operationData) => {
     try {
-      const response = await apiClient.post(
-        "/operations/create/",
-        operationData,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await api.post("/operations/create/", operationData, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       throw new Error(
@@ -128,7 +152,7 @@ const operationService = {
 
   updateOperation: async (operationId, operationData) => {
     try {
-      const response = await apiClient.patch(
+      const response = await api.patch(
         `/operations/${operationId}/update/`,
         operationData,
         {

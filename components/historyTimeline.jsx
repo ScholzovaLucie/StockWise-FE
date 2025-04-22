@@ -36,6 +36,7 @@ const HistoryTimeline = ({ type = null, relatedId = null }) => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [identifier, setIdentifier] = useState(null);
+  const [name, setName] = useState("");
 
   const fetchHistory = async () => {
     try {
@@ -50,30 +51,36 @@ const HistoryTimeline = ({ type = null, relatedId = null }) => {
             data = await historyService.getOperationHistory(params);
             instance = await operationService.getById(relatedId);
             setIdentifier(instance.number);
+            setName("operace");
             break;
           case "product":
             data = await historyService.getProductHistory(params);
             instance = await productService.getById(relatedId);
             setIdentifier(instance.code);
+            setName("produkt");
             break;
           case "batch":
             data = await historyService.getBatchHistory(params);
             instance = await batchService.getById(relatedId);
             setIdentifier(instance.ean);
+            setName("šarže");
             break;
           case "group":
             data = await historyService.getGroupHistory(params);
             instance = await groupService.getById(relatedId);
             setIdentifier(instance.name);
+            setName("skupina");
             break;
           case "position":
             data = await historyService.getPositionHistory(params);
             instance = await positionService.getById(relatedId);
             setIdentifier(instance.ean);
+            setName("pozice");
             break;
           default:
             data = await historyService.getAll(params);
             setIdentifier("all");
+            setName("");
         }
       } else {
         data = await historyService.getAll(params);
@@ -103,7 +110,7 @@ const HistoryTimeline = ({ type = null, relatedId = null }) => {
   return (
     <>
       <Typography variant="h4" sx={{ mb: 2 }}>
-        Historie {type}: {identifier}
+        Historie {name}: {identifier}
       </Typography>
       <Timeline position="alternate">
         {history.map((item) => {

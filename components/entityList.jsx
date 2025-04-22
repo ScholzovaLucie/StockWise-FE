@@ -41,7 +41,6 @@ const EntityList = ({
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [rowCount, setRowCount] = useState(0);
-  const lastFetch = useRef("");
   const fetchedOnce = useRef(false);
 
   const fetchEntities = useCallback(
@@ -57,25 +56,25 @@ const EntityList = ({
         let data = null;
 
         if (typeof filters === "string" && filters_map[filters]) {
-          console.log(filters);
-          console.log(filters_map[filters]);
-          data = await filters_map[filters](params); // 🟢 Tohle je OK
-          console.log(data);
+          data = await filters_map[filters](params);
         } else if (query) {
           data = await service.search(query, params);
         } else {
           data = await service.getAll(params);
         }
 
-        setEntities(Array.isArray(data.results) ? data.results : []);
+        setEntities(
+          Array.isArray(data.results || data) ? data.results || data : []
+        );
         setRowCount(data.count || 0);
       } catch (error) {
+        console.log(error);
         setMessage(error?.message || `Nepodařilo se načíst ${entityName}y.`);
       } finally {
         setLoading(false);
       }
     },
-    [filters, filters_map, service, selectedClient, setMessage, entityName] // ✅ přidat závislosti
+    [filters, filters_map, service, selectedClient, setMessage, entityName]
   );
 
   const debouncedSearch = useCallback(
@@ -88,11 +87,11 @@ const EntityList = ({
 
   useEffect(() => {
     fetchEntities(search, page, pageSize);
-  }, [page, pageSize]); // ✅ žádné search, jinak rušíš změnu filtru
+  }, [page, pageSize]);
 
   useEffect(() => {
     console.log(filters);
-  }, [filters]); // ✅ žádné search, jinak rušíš změnu filtru
+  }, [filters]);
 
   useEffect(() => {
     if (search !== "") {
@@ -118,6 +117,7 @@ const EntityList = ({
       await service.delete(id);
       setEntities((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
+      console.log("delete");
       setMessage(error?.message || `Nepodařilo se smazat ${entityName}.`);
     } finally {
       setLoading(false);
