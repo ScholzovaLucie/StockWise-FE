@@ -76,7 +76,6 @@ const StatsDashboardPage = () => {
         }
 
         setWidgets(widgetsData);
-        console.log("widgetsData", widgetsData);
         setLayouts(layoutData);
       })
       .catch(console.error);
@@ -159,7 +158,6 @@ const StatsDashboardPage = () => {
 
   const onLayoutChange = (currentLayout, allLayouts) => {
     if (editMode) {
-      console.log("allLayouts", allLayouts);
       setLayouts(allLayouts);
 
       const updatedWidgets = widgets.map((widget) => ({

@@ -2,7 +2,6 @@ import api from "./apiClient";
 
 const operationService = {
   getAll: async (params = {}) => {
-    console.log("getall");
     const response = await api.get(`/operations/all/`, { params });
     return response.data;
   },
@@ -28,7 +27,6 @@ const operationService = {
   },
 
   search: async (query, extraParams = {}) => {
-    console.log("search");
     const response = await api.get(`/operations/search/`, {
       params: { q: query, ...extraParams },
     });

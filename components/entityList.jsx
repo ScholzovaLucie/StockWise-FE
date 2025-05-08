@@ -68,7 +68,6 @@ const EntityList = ({
         );
         setRowCount(data.count || 0);
       } catch (error) {
-        console.log(error);
         setMessage(error?.message || `Nepodařilo se načíst ${entityName}y.`);
       } finally {
         setLoading(false);
@@ -90,7 +89,6 @@ const EntityList = ({
   }, [page, pageSize]);
 
   useEffect(() => {
-    console.log(filters);
   }, [filters]);
 
   useEffect(() => {
@@ -117,7 +115,6 @@ const EntityList = ({
       await service.delete(id);
       setEntities((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
-      console.log("delete");
       setMessage(error?.message || `Nepodařilo se smazat ${entityName}.`);
     } finally {
       setLoading(false);

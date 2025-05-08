@@ -19,7 +19,6 @@ export default function ResetPasswordPage() {
   const params = useSearchParams();
   const router = useRouter();
   const token = params.get("token");
-  console.log(token);
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

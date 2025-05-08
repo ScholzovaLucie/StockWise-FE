@@ -6,7 +6,7 @@ export const loginUser = async (email, password) => {
     const response = await api.post(
       "/auth/login/",
       { email, password },
-      { withCredentials: true } // Zajistí přenos cookies
+      { withCredentials: true }
     );
 
     return response.data;
@@ -36,19 +36,6 @@ export const fetchCurrentUser = async () => {
       withCredentials: true, // Backend pošle uživatelská data v odpovědi
     });
     return response.data;
-  } catch (error) {
-    return null;
-  }
-};
-
-export const refreshAccessToken = async () => {
-  try {
-    const response = await api.post(
-      "/auth/refresh/",
-      {},
-      { withCredentials: true }
-    );
-    return response.data.access_token;
   } catch (error) {
     return null;
   }

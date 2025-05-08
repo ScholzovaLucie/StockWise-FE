@@ -34,7 +34,6 @@ export default function AuthPage() {
 
     try {
       if (password === passwordAgain) {
-        console.log(password);
         const userData = await registerUser(email, password);
         setUser(userData.user);
         localStorage.removeItem("lastVisitedUrl");

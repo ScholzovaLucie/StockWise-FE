@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
 
+
+function getCookie(req, name) {
+  const cookie = req.headers.get("cookie");
+  if (!cookie) return null;
+  const match = cookie.match(new RegExp(`${name}=([^;]+)`));
+  return match ? match[1] : null;
+}
+
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
-  const accessToken = req.cookies.get("access_token")?.value;
+  const accessToken = getCookie(req, "access_token");
 
   if (
     pathname.startsWith("/auth/login") ||
@@ -10,9 +18,6 @@ export async function middleware(req) {
     pathname.startsWith("/auth/reset-password") ||
     pathname.startsWith("/auth/registr") ||
     pathname.startsWith("/auth/login/reset-password") ||
-    pathname.startsWith("/auth/login/forgot-password") ||
-    pathname.startsWith("/auth/registr") ||
-    pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/static") ||
     /\.(.*)$/.test(pathname)
@@ -24,23 +29,21 @@ export async function middleware(req) {
     return NextResponse.redirect(new URL("/auth/login", req.url));
   }
 
-  try {
-    const response = await fetch("http://localhost:8000/api/auth/me/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    if (response.status !== 200) {
-      return NextResponse.redirect(new URL("/auth/login", req.url));
+  return fetch('http://stockwise-backend:8000/api/auth/me/', {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      withCredentials: true,
+    },
+  }).then((res) => {
+    if (!res.ok) {
+      return NextResponse.redirect(new URL('/auth/login', req.url))
     }
 
-    const user = await response.json();
-  } catch (error) {
-    return NextResponse.redirect(new URL("/auth/login", req.url));
-  }
+    return NextResponse.next()
+  }).catch((e) => {
+    return NextResponse.redirect(new URL('/auth/login', req.url))
+  })
 
   return NextResponse.next();
 }

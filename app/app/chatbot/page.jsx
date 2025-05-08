@@ -66,7 +66,6 @@ const Chatbot = () => {
     if (!selectedClient) return;
     try {
       const history = await chatbotService.getHistory(selectedClient);
-      console.log(history);
       setMessages(history);
     } catch (error) {
       setMessage(error.message);
@@ -80,7 +79,6 @@ const Chatbot = () => {
       role: "user",
       content: chatMessage || (file && `📎 ${file.name}`),
     };
-    console.log(userMessage);
     setMessages((prev) => [...prev, userMessage]);
     setChatMessage("");
     setBotTyping(true);
@@ -95,7 +93,6 @@ const Chatbot = () => {
       setFile(null); // reset souboru po odeslání
 
       setTimeout(() => {
-        console.log(botResponse);
         setMessages((prev) => [...prev, botResponse]);
         setBotTyping(false);
       });

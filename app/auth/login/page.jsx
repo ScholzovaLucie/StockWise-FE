@@ -33,6 +33,7 @@ export default function AuthPage() {
       setUser(userData.user);
       const lastVisitedUrl =
         localStorage.getItem("lastVisitedUrl") || "/app/dashboard";
+
       router.push(lastVisitedUrl);
     } catch (err) {
       setError(err?.message || "Nastala neočekávaná chyba.");
