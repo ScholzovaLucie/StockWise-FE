@@ -29,20 +29,23 @@ const EntityDetail = ({
 }) => {
   const { id } = useParams();
   const router = useRouter();
-  const [entity, setEntity] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
-  const { message, setMessage } = useMessage();
-  const [formData, setFormData] = useState({});
 
+  const [entity, setEntity] = useState(null); // Načtená entita z API
+  const [loading, setLoading] = useState(true); // Stav načítání
+  const [isEditing, setIsEditing] = useState(false); // Režim úprav
+  const { message, setMessage } = useMessage(); // Kontextová zpráva
+  const [formData, setFormData] = useState({}); // Stav formuláře
+
+  // Po načtení ID entity ji načti z API
   useEffect(() => {
     if (!id) return;
 
     const loadEntity = async () => {
       setLoading(true);
       try {
-        const data = await service.getById(id);
+        const data = await service.getById(id); // Získání entity dle ID
         setEntity(data);
+        // Naplnění výchozího formuláře hodnotami z entity
         setFormData(
           fields.concat(selectFields).reduce((acc, field) => {
             acc[field.name] = data[field.name] || "";
@@ -51,7 +54,7 @@ const EntityDetail = ({
         );
         setMessage(null);
       } catch (error) {
-        setMessage(error.message);
+        setMessage(error.message); // Nastavení chybové zprávy
       } finally {
         setLoading(false);
       }
@@ -60,19 +63,21 @@ const EntityDetail = ({
     loadEntity();
   }, [id, fields, selectFields]);
 
+  // Obecný handler změny hodnoty ve formuláři
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value, // Hodnota je nyní pole pro více výběrů
+      [name]: value,
     }));
   };
 
+  // Uložení změn do backendu
   const handleSave = async () => {
     try {
-      await service.update(id, formData);
-      setEntity(formData);
-      setIsEditing(false);
+      await service.update(id, formData); // Odeslání změn na server
+      setEntity(formData); // Aktualizace lokální entity
+      setIsEditing(false); // Ukončení editačního režimu
       setMessage(null);
     } catch (error) {
       setMessage(error?.message || "Došlo k chybě při ukládání.");
@@ -83,6 +88,7 @@ const EntityDetail = ({
 
   return (
     <Container>
+      {/* Zpět tlačítko a nadpis */}
       <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
         <IconButton onClick={() => router.back()} color="primary">
           <ArrowBackIcon />
@@ -91,8 +97,11 @@ const EntityDetail = ({
           {title}
         </Typography>
       </Box>
+
+      {/* Detail entity */}
       {entity ? (
         <Box>
+          {/* Vykreslení základních polí (text, číslo, datum) */}
           {fields.map((field) => {
             if (field.type === "number") {
               return (
@@ -126,6 +135,8 @@ const EntityDetail = ({
               );
             }
           })}
+
+          {/* Vykreslení select polí */}
           {selectFields?.map((select) => (
             <FormControl
               key={select.name}
@@ -140,7 +151,7 @@ const EntityDetail = ({
                 labelId={`${select.name}-label`}
                 name={select.name}
                 multiple={select.multiple}
-                value={formData[select.name] || (select.multiple ? [] : "")} // Oprava pro single select
+                value={formData[select.name] || (select.multiple ? [] : "")}
                 onChange={handleChange}
                 renderValue={(selected) => {
                   if (select.multiple) {
@@ -156,7 +167,7 @@ const EntityDetail = ({
                     const option = select.options.find(
                       (opt) => opt.id === selected
                     );
-                    return option ? option.name : ""; // Oprava pro single select
+                    return option ? option.name : "";
                   }
                 }}
                 label={select.label}
@@ -169,6 +180,8 @@ const EntityDetail = ({
               </Select>
             </FormControl>
           ))}
+
+          {/* Tlačítka pro přepínání režimu editace a uložení */}
           <Box display="flex" justifyContent="space-between">
             <Button
               color="primary"
@@ -185,6 +198,7 @@ const EntityDetail = ({
           </Box>
         </Box>
       ) : (
+        // Pokud entita není nalezena
         <Typography variant="h6" color="error">
           Entita nebyla nalezena.
         </Typography>

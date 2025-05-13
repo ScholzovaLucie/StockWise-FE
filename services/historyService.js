@@ -1,13 +1,14 @@
 import api from "./apiClient";
 
 const historyService = {
+  // Získání veškeré historie (obecné volání bez specifikace typu)
   getAll: async (params = {}) => {
     try {
       const response = await api.get(
-        `/histories/`,
+        `/history/`,
         { params },
         {
-          withCredentials: true,
+          withCredentials: true, // zajištění přenosu cookies
         }
       );
       return response.data;
@@ -15,10 +16,12 @@ const historyService = {
       throw new Error("Chyba při načítání historie.");
     }
   },
+
+  // Historie specifická pro operace
   getOperationHistory: async (params = {}) => {
     try {
       const response = await api.get(
-        `/histories/operation`,
+        `/history/operation`,
         { params },
         {
           withCredentials: true,
@@ -29,10 +32,12 @@ const historyService = {
       throw new Error("Chyba při načítání historie.");
     }
   },
+
+  // Historie pro produkt
   getProductHistory: async (params = {}) => {
     try {
       const response = await api.get(
-        `/histories/product`,
+        `/history/product`,
         { params },
         {
           withCredentials: true,
@@ -43,10 +48,12 @@ const historyService = {
       throw new Error("Chyba při načítání historie.");
     }
   },
+
+  // Historie pro pozici
   getPositionHistory: async (params = {}) => {
     try {
       const response = await api.get(
-        `/histories/position`,
+        `/history/position`,
         { params },
         {
           withCredentials: true,
@@ -57,10 +64,12 @@ const historyService = {
       throw new Error("Chyba při načítání historie.");
     }
   },
+
+  // Historie pro šarži
   getBatchHistory: async (params = {}) => {
     try {
       const response = await api.get(
-        `/histories/batch`,
+        `/history/batch`,
         { params },
         {
           withCredentials: true,
@@ -71,10 +80,12 @@ const historyService = {
       throw new Error("Chyba při načítání historie.");
     }
   },
+
+  // Historie pro skupinu
   getGroupHistory: async (params = {}) => {
     try {
       const response = await api.get(
-        `/histories/group`,
+        `/history/group`,
         { params },
         {
           withCredentials: true,
@@ -85,8 +96,10 @@ const historyService = {
       throw new Error("Chyba při načítání historie.");
     }
   },
+
+  // Fulltextové vyhledávání v historii
   search: async (query, extraParams = {}) => {
-    const response = await api.get(`/histories/search/`, {
+    const response = await api.get(`/history/search/`, {
       params: { q: query, ...extraParams },
     });
     return response.data;

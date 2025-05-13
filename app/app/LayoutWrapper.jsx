@@ -9,13 +9,6 @@ const LayoutWrapper = ({ children }) => {
 
   return (
     <Box
-      // px={{
-      //   xs: 0.5, // Extra small screens
-      //   sm: 4, // Small screens
-      //   md: 6, // Medium screens
-      //   lg: 8, // Large screens
-      //   xl: 10, // Extra large screens
-      // }}
       sx={{
         p: 4,
         backgroundColor: theme.palette.background.paper,

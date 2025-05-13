@@ -8,7 +8,7 @@ import { lightTheme, darkTheme } from "/theme/theme";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import UserSection from "components/userSection";
 import { usePathname, useRouter } from "next/navigation";
-import { ClientProvider } from "context/clientContext"; // Import ClientProvider
+import { ClientProvider } from "context/clientContext";
 import { MessageProvider, useMessage } from "context/messageContext";
 import ClientSelector from "components/clientSelector";
 import LayoutWrapper from "./LayoutWrapper";
@@ -28,6 +28,7 @@ import {
   SmartToy as SmartToyIcon,
 } from "@mui/icons-material";
 
+// Navigační konfigurace postranního menu
 const NAVIGATION = [
   {
     segment: "app/dashboard",
@@ -99,7 +100,7 @@ export default function AppLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  // 🛠 Inicializace módu z sessionStorage
+  // Získání preferovaného tématu z sessionStorage při načtení
   const [mode, setMode] = useState(() => {
     if (typeof window !== "undefined") {
       return sessionStorage.getItem("themeMode") || "light";
@@ -107,11 +108,12 @@ export default function AppLayout({ children }) {
     return "light";
   });
 
-  // 🛠 Uložení módu do sessionStorage při změně
+  // Uložení změny tématu do sessionStorage
   useEffect(() => {
     sessionStorage.setItem("themeMode", mode);
   }, [mode]);
 
+  // Vytvoření MUI tématu podle módu
   const theme = useMemo(
     () => (mode === "light" ? lightTheme : darkTheme),
     [mode]
@@ -140,7 +142,10 @@ export default function AppLayout({ children }) {
                 ),
               }}
             >
+              {/* Obalení layoutu – např. animace nebo padding */}
               <LayoutWrapper>{children}</LayoutWrapper>
+
+              {/* Snackbar pro notifikace */}
               <MessageSnackbar />
             </DashboardLayout>
           </AppProvider>
@@ -150,6 +155,7 @@ export default function AppLayout({ children }) {
   );
 }
 
+// Snackbar komponenta zobrazující globální zprávy z MessageContextu
 function MessageSnackbar() {
   const { message, setMessage } = useMessage();
 

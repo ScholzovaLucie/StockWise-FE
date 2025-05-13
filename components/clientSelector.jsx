@@ -8,25 +8,27 @@ import { useMessage } from "context/messageContext";
 import CircularProgress from "@mui/material/CircularProgress";
 
 export default function ClientSelector() {
-  const { selectedClient, setSelectedClient } = useClient();
-  const [clients, setClients] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const { setMessage } = useMessage();
+  const { selectedClient, setSelectedClient } = useClient(); // Získání a nastavení aktuálně vybraného klienta z kontextu
+  const [clients, setClients] = useState([]); // Stav pro uchování seznamu klientů
+  const [isLoading, setIsLoading] = useState(true); // Stav pro indikaci načítání dat
+  const { setMessage } = useMessage(); // Funkce pro zobrazení zprávy (např. chyba při načítání)
 
+  // Změna vybraného klienta při výběru v selectu
   const handleChange = (event) => {
     const value = event.target.value === "all" ? null : event.target.value;
     setSelectedClient(value);
   };
 
+  // Načtení klientů při změně `selectedClient` (může být diskutabilní – typicky se načítá jen jednou při mountu)
   useEffect(() => {
     const loadData = async () => {
       try {
         const data = await clientService.getAll({ no_page: 1 });
-        setClients(data?.resluts || data);
+        setClients(data?.resluts || data); // Ošetření různých struktur odpovědi (tip: pravděpodobně překlep ve "resluts")
       } catch (error) {
-        setMessage("Error loading data: " + error.message);
+        setMessage("Error loading data: " + error.message); // Nastavení chybové zprávy
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // Skrytí loaderu po dokončení
       }
     };
 
@@ -34,7 +36,7 @@ export default function ClientSelector() {
   }, [selectedClient]);
 
   if (isLoading) {
-    return <CircularProgress />;
+    return <CircularProgress />; // Zobrazení loaderu během načítání
   }
 
   return (
@@ -46,7 +48,7 @@ export default function ClientSelector() {
       <InputLabel id="client-selector-label">Select Client</InputLabel>
       <Select
         labelId="client-selector-label"
-        value={selectedClient === null ? "all" : selectedClient}
+        value={selectedClient === null ? "all" : selectedClient} // Pokud není vybrán žádný klient, zobrazí "All"
         onChange={handleChange}
         label="Select Client"
       >

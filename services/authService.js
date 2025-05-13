@@ -1,12 +1,13 @@
 import api from "./apiClient";
 import Cookies from "js-cookie";
 
+// Přihlášení uživatele – vrací data nebo vyhazuje chybu
 export const loginUser = async (email, password) => {
   try {
     const response = await api.post(
       "/auth/login/",
       { email, password },
-      { withCredentials: true }
+      { withCredentials: true } // zajistí přenos cookies
     );
 
     return response.data;
@@ -15,14 +16,13 @@ export const loginUser = async (email, password) => {
   }
 };
 
+// Registrace uživatele
 export const registerUser = async (email, password) => {
   try {
     const response = await api.post(
       "/auth/register/",
       { email, password },
-      {
-        withCredentials: true,
-      }
+      { withCredentials: true }
     );
     return response.data;
   } catch (error) {
@@ -30,24 +30,29 @@ export const registerUser = async (email, password) => {
   }
 };
 
+// Získání aktuálně přihlášeného uživatele
 export const fetchCurrentUser = async () => {
   try {
     const response = await api.get("/auth/me/", {
-      withCredentials: true, // Backend pošle uživatelská data v odpovědi
+      withCredentials: true, // cookies musí být součástí požadavku
     });
     return response.data;
   } catch (error) {
-    return null;
+    return null; // při chybě vrací null (nepřihlášený uživatel)
   }
 };
 
+// Odhlášení uživatele a přesměrování na login
 export const logout = async () => {
   try {
     await api.post("/auth/logout/", {}, { withCredentials: true });
-  } catch (error) {}
-  window.location.href = "/auth/login";
+  } catch (error) {
+    // chybu ignorujeme, i kdyby už byl uživatel odhlášen
+  }
+  window.location.href = "/auth/login"; // přesměrování na přihlášení
 };
 
+// Změna hesla uživatele
 export const changePassword = async (
   old_password,
   new_password,
@@ -65,6 +70,7 @@ export const changePassword = async (
   }
 };
 
+// Požadavek na reset hesla (odeslání e-mailu s tokenem)
 export const requestPasswordReset = async (email) => {
   try {
     const response = await api.post(
@@ -81,6 +87,7 @@ export const requestPasswordReset = async (email) => {
   }
 };
 
+// Resetování hesla pomocí tokenu z e-mailu
 export const resetPassword = async (token, new_password, confirm_password) => {
   try {
     const response = await api.post(

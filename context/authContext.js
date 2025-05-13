@@ -5,29 +5,34 @@ import { useRouter } from "next/navigation";
 import { fetchCurrentUser } from "services/authService";
 import LoadingScreen from "components/loadingScreen";
 
+// Vytvoření kontextu pro autentizaci
 const AuthContext = createContext(null);
 
+// Provider obalující aplikaci – zajišťuje přihlášeného uživatele
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [initialLoading, setInitialLoading] = useState(true);
+  const [user, setUser] = useState(null); // přihlášený uživatel
+  const [initialLoading, setInitialLoading] = useState(true); // načítání při prvním mountu
   const router = useRouter();
 
+  // Funkce pro načtení uživatele z backendu
   const fetchUser = async () => {
     try {
-      const response = await fetchCurrentUser();
+      const response = await fetchCurrentUser(); // volá /auth/me/
       setUser(response);
     } catch (error) {
-      setUser(null);
-      router.push("/auth/login");
+      setUser(null); // chyba při načítání → nastavíme null
+      router.push("/auth/login"); // přesměrování na login
     } finally {
-      setInitialLoading(false);
+      setInitialLoading(false); // ukončíme stav načítání
     }
   };
 
+  // Načteme uživatele při načtení komponenty
   useEffect(() => {
     fetchUser();
   }, []);
 
+  // Zobrazíme loading screen, dokud se neověří autentizace
   if (initialLoading) {
     return <LoadingScreen />;
   }
@@ -39,6 +44,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// Hook pro snadné použití autentizačního kontextu
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

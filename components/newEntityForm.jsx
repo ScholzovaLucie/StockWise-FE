@@ -29,28 +29,32 @@ const NewEntityForm = ({
   const router = useRouter();
   const { message, setMessage } = useMessage();
   const [loading, setLoading] = useState(false);
+
+  // Inicializace formulářových dat – každý field má výchozí hodnotu ""
   const [formData, setFormData] = useState(
     fields
       .concat(selectFields)
       .reduce((acc, field) => ({ ...acc, [field.name]: "" }), {})
   );
 
+  // Změna hodnoty libovolného pole
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value, // Pokud je multiple, hodnota je pole
+      [name]: value,
     }));
   };
 
+  // Odeslání formuláře (vytvoření entity)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await service.create(formData);
-      router.push(redirectPath);
+      await service.create(formData); // Zavolání metody z poskytnutého service
+      router.push(redirectPath); // Přesměrování po úspěchu
     } catch (error) {
-      setMessage(`Error creating entity: ${error.message}`);
+      setMessage(`Error creating entity: ${error.message}`); // Nastavení chybové zprávy
     } finally {
       setLoading(false);
     }
@@ -63,7 +67,7 @@ const NewEntityForm = ({
       </Typography>
 
       <form onSubmit={handleSubmit}>
-        {/* Text Fields */}
+        {/* Pole formuláře – dle typu komponenty */}
         {fields.map((field) => {
           if (field.type === "number") {
             return (
@@ -95,7 +99,7 @@ const NewEntityForm = ({
           }
         })}
 
-        {/* Select Fields */}
+        {/* Select pole – jedno nebo vícenásobné výběry */}
         {selectFields.map((field) => (
           <FormControl key={field.name} fullWidth sx={{ mb: 2 }}>
             <InputLabel id={`${field.name}-label`}>{field.label}</InputLabel>
@@ -103,7 +107,7 @@ const NewEntityForm = ({
               labelId={`${field.name}-label`}
               name={field.name}
               multiple={field.multiple}
-              value={formData[field.name] ?? (field.multiple ? [] : "")} // Oprava pro single select
+              value={formData[field.name] ?? (field.multiple ? [] : "")}
               onChange={(e) => {
                 const { name, value } = e.target;
                 setFormData((prevData) => ({
@@ -129,8 +133,6 @@ const NewEntityForm = ({
             >
               {field.options.map((option) => (
                 <MenuItem key={option.id} value={option.id}>
-                  {" "}
-                  {/* Oprava hodnoty */}
                   {option.name}
                 </MenuItem>
               ))}
@@ -138,6 +140,7 @@ const NewEntityForm = ({
           </FormControl>
         ))}
 
+        {/* Tlačítka pro zrušení a odeslání */}
         <Box display="flex" justifyContent="space-between">
           <Button
             onClick={() => router.push(redirectPath)}

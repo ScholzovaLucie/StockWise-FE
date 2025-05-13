@@ -24,6 +24,7 @@ import {
 } from "@mui/icons-material";
 import groupService from "services/groupService";
 
+// Mapování typů historie na ikonky a barvy pro Timeline
 const typeMap = {
   operation: { label: "Operace", icon: <OperationIcon />, color: "primary" },
   product: { label: "Produkt", icon: <ProductIcon />, color: "success" },
@@ -33,11 +34,12 @@ const typeMap = {
 };
 
 const HistoryTimeline = ({ type = null, relatedId = null }) => {
-  const [history, setHistory] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [identifier, setIdentifier] = useState(null);
-  const [name, setName] = useState("");
+  const [history, setHistory] = useState([]); // Seznam historických záznamů
+  const [loading, setLoading] = useState(true); // Indikace načítání
+  const [identifier, setIdentifier] = useState(null); // Jedinečný identifikátor entity
+  const [name, setName] = useState(""); // Název typu entity pro nadpis
 
+  // Načítání historie podle typu a ID entity
   const fetchHistory = async () => {
     try {
       setLoading(true);
@@ -87,6 +89,7 @@ const HistoryTimeline = ({ type = null, relatedId = null }) => {
         setIdentifier("all");
       }
 
+      // Uložení výsledků (ošetření response formátu)
       setHistory(Array.isArray(data.results) ? data.results : []);
     } catch (e) {
       console.error("Chyba při načítání historie:", e.message);
@@ -95,6 +98,7 @@ const HistoryTimeline = ({ type = null, relatedId = null }) => {
     }
   };
 
+  // Načtení historie při změně typu nebo ID
   useEffect(() => {
     fetchHistory();
   }, [type, relatedId]);
@@ -109,9 +113,12 @@ const HistoryTimeline = ({ type = null, relatedId = null }) => {
 
   return (
     <>
+      {/* Nadpis s typem a identifikátorem entity */}
       <Typography variant="h4" sx={{ mb: 2 }}>
         Historie {name}: {identifier}
       </Typography>
+
+      {/* Timeline komponenta pro zobrazení historie */}
       <Timeline position="alternate">
         {history.map((item) => {
           const { id, type, timestamp, description, user } = item;

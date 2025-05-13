@@ -1,18 +1,19 @@
 import api from "./apiClient";
 
 const chatbotService = {
+  // Odeslání zprávy chatbotovi (volitelně s klientem a souborem)
   sendMessage: async (message, clientId = null, file = null) => {
     try {
       const formData = new FormData();
       formData.append("input_chat", message);
       formData.append("client", clientId);
       if (file) {
-        formData.append("file", file);
+        formData.append("file", file); // Přiložený soubor (např. Excel/CSV)
       }
 
       const response = await api.post("/chatbot", formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "multipart/form-data", // důležité pro soubory
         },
       });
 
@@ -26,6 +27,7 @@ const chatbotService = {
     }
   },
 
+  // Získání historie chatu (volitelně pro konkrétního klienta)
   getHistory: async (clientId = null) => {
     try {
       const response = await api.post("/chatbot", {
@@ -41,6 +43,7 @@ const chatbotService = {
     }
   },
 
+  // Resetování chatu – smazání vlákna (např. po přepnutí klienta)
   resetChat: async (clientId = null) => {
     try {
       await api.post("/chatbot", { reset: true, client: clientId });
@@ -51,6 +54,8 @@ const chatbotService = {
       );
     }
   },
+
+  // Získání dat statistiky (např. graf nebo text) na základě ID a klienta
   getStat: async (statId, clientId) => {
     try {
       const response = await api.post("/statistics", {

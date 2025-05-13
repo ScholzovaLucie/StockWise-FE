@@ -29,7 +29,7 @@ const Products = () => {
     { field: "sku", headerName: "SKU", width: 120 },
     { field: "name", headerName: "Název", flex: 1 },
     { field: "description", headerName: "Popis", flex: 1 },
-    { field: "amount", headerName: "Množství", width: 100 },
+    { field: "amount_cached", headerName: "Množství", width: 100 },
     {
       field: "groups",
       headerName: "Skupiny",
