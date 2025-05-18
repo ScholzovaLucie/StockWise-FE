@@ -1,48 +1,57 @@
-import { getDashboardRecentActivity } from "services/dashboardService";
+"use client";
+
+import React from "react";
+import { getDashboardStats } from "services/dashboardService";
 import { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
+import {
+  Paper,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+} from "@mui/material";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
-  LineElement,
-  PointElement,
   CategoryScale,
   LinearScale,
+  BarElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
-import {
-  Paper,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  TextField,
-} from "@mui/material";
 import { useClient } from "context/clientContext";
 
-// 🔧 Registrace komponent pro Chart.js
 ChartJS.register(
-  LineElement,
-  PointElement,
   CategoryScale,
   LinearScale,
+  BarElement,
   Title,
   Tooltip,
   Legend
 );
 
-const RecentActivityWidget = () => {
-  const [activities, setActivities] = useState({ chart: [], recent: [] });
-  const [selectedType, setSelectedType] = useState("");
+const StatsWidget = () => {
+  // Stav pro získaná statistická data
+  const [stats, setStats] = useState(null);
+
+  // Vybrané období (týden, měsíc, rok, vlastní)
   const [selectedPeriod, setSelectedPeriod] = useState("week");
+
+  // Vlastní datumové období
   const [customFrom, setCustomFrom] = useState("");
   const [customTo, setCustomTo] = useState("");
+
+  // Aktuálně vybraný klient z kontextu
   const { selectedClient } = useClient();
 
+  // Efekt pro načtení dat při změně filtrů nebo klienta
   useEffect(() => {
-    let filters = { type: selectedType };
+    let filters = {};
 
+    // Nastavení filtrů dle vybraného období
     if (selectedPeriod === "week") {
       filters.from_date = new Date(new Date().setDate(new Date().getDate() - 7))
         .toISOString()
@@ -57,60 +66,56 @@ const RecentActivityWidget = () => {
       filters.to_date = customTo;
     }
 
-    getDashboardRecentActivity({ filters: filters, clientId: selectedClient })
-      .then((data) => setActivities(data))
-      .catch((err) => console.error(err));
-  }, [selectedClient, selectedType, selectedPeriod, customFrom, customTo]);
+    // Volání API pro načtení dat
+    getDashboardStats({ filters: filters, clientId: selectedClient })
+      .then((data) => setStats(data)) // Uložení dat
+      .catch((err) => console.error(err)); // Logování chyby
+  }, [selectedClient, selectedPeriod, customFrom, customTo]);
 
-  // 📊 Data pro graf
-  const types = ["operation", "product", "batch", "position"];
-  const colors = {
-    operation: "#42a5f5",
-    product: "#66bb6a",
-    batch: "#ff7043",
-    position: "#ab47bc",
+  // Zobrazení při čekání na data
+  if (!stats) {
+    return <Typography>Načítám data...</Typography>;
+  }
+
+  // Data pro sloupcový graf
+  const chartData = {
+    labels: ["Dokončené", "Zrušené", "Probíhající"],
+    datasets: [
+      {
+        label: "Operace",
+        data: [
+          stats.completedOperations,
+          stats.cancelledOperations,
+          stats.inProgressOperations,
+        ],
+        backgroundColor: ["#4caf50", "#f44336", "#ff9800"],
+      },
+    ],
   };
 
-  const labels = [
-    ...new Set(
-      activities.chart.map((item) => new Date(item.date).toLocaleDateString())
-    ),
-  ];
-
-  const datasets = types.map((type) => {
-    const dataPoints = labels.map((label) => {
-      const item = activities.chart.find(
-        (activity) =>
-          new Date(activity.date).toLocaleDateString() === label &&
-          activity[type] !== undefined
-      );
-      return item ? item[type] : 0;
-    });
-    return {
-      label: type.charAt(0).toUpperCase() + type.slice(1),
-      data: dataPoints,
-      borderColor: colors[type],
-      backgroundColor: colors[type] + "33",
-      fill: false,
-    };
-  });
-
-  const chartData = {
-    labels,
-    datasets,
+  // Nastavení chování grafu
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: { position: "top" },
+    },
   };
 
   return (
     <Paper
       sx={{
-        overflow: "auto",
+        overflow: "auto", // scroll při přetečení
         height: "90%",
         p: 2,
         gap: 1,
         textAlign: "center",
       }}
     >
-      <FormControl sx={{ minWidth: 100, marginRight: 1, mb: 1 }} size="small">
+      {/* 🔽 Výběr období pro statistiku */}
+      <FormControl
+        sx={{ minWidth: 100, marginRight: 1, marginBottom: 1 }}
+        size="small"
+      >
         <Select
           value={selectedPeriod}
           onChange={(e) => setSelectedPeriod(e.target.value)}
@@ -122,6 +127,7 @@ const RecentActivityWidget = () => {
         </Select>
       </FormControl>
 
+      {/* 🧾 Vlastní datumové období */}
       {selectedPeriod === "custom" && (
         <>
           <TextField
@@ -145,9 +151,10 @@ const RecentActivityWidget = () => {
         </>
       )}
 
-      <Line data={chartData} options={{ responsive: true }} />
+      {/* 📊 Sloupcový graf s přehledem operací */}
+      <Bar sx={{ m: 1 }} data={chartData} options={options} />
     </Paper>
   );
 };
 
-export default RecentActivityWidget;
+export default StatsWidget;

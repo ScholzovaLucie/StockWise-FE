@@ -63,7 +63,7 @@ const Groups = () => {
                 );
               }}
               color="primary"
-              startIcon={<ArrowDownwardIcon sx={{ color: "green" }} />} // 📥 Příjemka (zelená šipka dolů)
+              startIcon={<ArrowDownwardIcon sx={{ color: "green" }} />} // Příjemka (zelená šipka dolů)
             >
               {params.row.operations_in.count}
             </Button>
@@ -85,7 +85,7 @@ const Groups = () => {
                 );
               }}
               color="primary"
-              startIcon={<ArrowUpwardIcon sx={{ color: "red" }} />} // 📤 Výdejka (červená šipka nahoru)
+              startIcon={<ArrowUpwardIcon sx={{ color: "red" }} />} // Výdejka (červená šipka nahoru)
             >
               {params.row.operations_out.count}
             </Button>

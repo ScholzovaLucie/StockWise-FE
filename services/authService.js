@@ -7,7 +7,7 @@ export const loginUser = async (email, password) => {
     const response = await api.post(
       "/auth/login/",
       { email, password },
-      { withCredentials: true } // zajistí přenos cookies
+      { withCredentials: true }
     );
 
     return response.data;
@@ -34,11 +34,11 @@ export const registerUser = async (email, password) => {
 export const fetchCurrentUser = async () => {
   try {
     const response = await api.get("/auth/me/", {
-      withCredentials: true, // cookies musí být součástí požadavku
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {
-    return null; // při chybě vrací null (nepřihlášený uživatel)
+    return null;
   }
 };
 
@@ -46,10 +46,8 @@ export const fetchCurrentUser = async () => {
 export const logout = async () => {
   try {
     await api.post("/auth/logout/", {}, { withCredentials: true });
-  } catch (error) {
-    // chybu ignorujeme, i kdyby už byl uživatel odhlášen
-  }
-  window.location.href = "/auth/login"; // přesměrování na přihlášení
+  } catch (error) {}
+  window.location.href = "/auth/login";
 };
 
 // Změna hesla uživatele

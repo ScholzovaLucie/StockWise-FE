@@ -2,14 +2,13 @@ import createCRUDService from "./CRUDService";
 import api from "./apiClient";
 
 const productService = {
-  // Základní CRUD operace (getAll, getById, create, update, delete, search)
   ...createCRUDService("products"),
 
-  // Získání produktů podle ID klienta (např. pro výběr v operaci)
+  // Získání produktů podle ID klienta
   getProductsByClient: async (clientId) => {
     try {
       const response = await api.get("/products/", {
-        params: { client: clientId }, // filtrování podle klienta
+        params: { client: clientId },
       });
       return response.data;
     } catch (error) {
@@ -18,7 +17,7 @@ const productService = {
     }
   },
 
-  // Získání skladové dostupnosti (např. pro výdej zboží)
+  // Získání skladové dostupnosti
   getProductStock: async (productId) => {
     const response = await api.get(`/products/${productId}/stock/`);
     return response.data;

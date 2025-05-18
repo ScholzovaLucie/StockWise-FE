@@ -1,7 +1,7 @@
 import api from "./apiClient";
 
 const operationService = {
-  // Získání všech operací (včetně parametrů jako filtrování, stránkování)
+  // Získání všech operací
   getAll: async (params = {}) => {
     const response = await api.get(`/operations/all/`, { params });
     return response.data;
@@ -13,7 +13,7 @@ const operationService = {
     return response.data;
   },
 
-  // Vytvoření operace (používá se jen u některých variant)
+  // Vytvoření operace
   create: async (data) => {
     const response = await api.post(`/operations/`, data);
     return response.data;
@@ -25,7 +25,7 @@ const operationService = {
     return response.data;
   },
 
-  // Smazání operace – přesměrováno na vlastní endpoint `/remove/`
+  // Smazání operace
   delete: async (id) => {
     const response = await api.delete(`/operations/${id}/remove/`);
     return response.data;
@@ -39,7 +39,7 @@ const operationService = {
     return response.data;
   },
 
-  // Načtení seznamu všech možných statusů (např. "Připraveno", "Zabalené" atd.)
+  // Načtení seznamu všech možných statusů
   getStatuses: async () => {
     try {
       const response = await api.get("/operations/statuses");
@@ -51,7 +51,7 @@ const operationService = {
     }
   },
 
-  // Načtení všech možných typů operací (např. "IN", "OUT")
+  // Načtení všech možných typů operací
   getTypes: async () => {
     try {
       const response = await api.get("/operations/types");
@@ -79,7 +79,7 @@ const operationService = {
     return response.data;
   },
 
-  // Získání přehledu produktů v rámci dané operace (např. pro balení)
+  // Získání přehledu produktů v rámci dané operace
   getOperationProductSummary: async (operationId) => {
     try {
       const response = await api.get(
@@ -109,7 +109,7 @@ const operationService = {
     }
   },
 
-  // Změna statusu operace (např. ručně z dashboardu)
+  // Změna statusu operace
   updateOperationStatus: async (operationId, newStatus) => {
     try {
       const response = await api.patch(
@@ -125,7 +125,7 @@ const operationService = {
     }
   },
 
-  // Spuštění procesu balení (např. označení jako 'zabalit')
+  // Spuštění procesu balení
   startPackaging: async (id) => {
     const response = await api.post(`/operations/${id}/start_packaging/`, {
       withCredentials: true,
@@ -133,7 +133,7 @@ const operationService = {
     return response.data;
   },
 
-  // Vytvoření nové operace (modernější metoda)
+  // Vytvoření nové operace
   createOperation: async (operationData) => {
     try {
       const response = await api.post("/operations/create/", operationData, {
@@ -147,7 +147,7 @@ const operationService = {
     }
   },
 
-  // Aktualizace existující operace (modernější metoda)
+  // Aktualizace existující operace
   updateOperation: async (operationId, operationData) => {
     try {
       const response = await api.patch(

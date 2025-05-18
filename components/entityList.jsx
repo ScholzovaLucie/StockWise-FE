@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { DataGrid } from "@mui/x-data-grid";
@@ -188,6 +189,8 @@ const EntityList = ({
 
                           {/* Smazání záznamu */}
                           <IconButton
+                            aria-label={`smazat ${entityName}`}
+                            title={`Smazat ${entityName}`}
                             onClick={() => handleDelete(params.row.id)}
                             color="error"
                           >

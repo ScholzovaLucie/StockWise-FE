@@ -35,9 +35,9 @@ const PackingPage = () => {
   const [selectedBox, setSelectedBox] = useState("");
   const [quantityToAdd, setQuantityToAdd] = useState(0);
   const { message, setMessage } = useMessage();
-  const [productsInBox, setProductsInBox] = useState([]); // 📦 Seznam produktů v krabici
+  const [productsInBox, setProductsInBox] = useState([]);
   const [productSummary, setProductSummary] = useState([]);
-  const [availableBoxes, setAvailableBoxes] = useState([]); // 📦 Seznam všech dostupných krabic
+  const [availableBoxes, setAvailableBoxes] = useState([]);
 
   useEffect(() => {
     const fetchOperation = async () => {
@@ -86,7 +86,7 @@ const PackingPage = () => {
     fetchBoxes();
   }, [id]);
 
-  // 📦 Načtení produktů v krabici při změně výběru
+  // Načtení produktů v krabici při změně výběru
   useEffect(() => {
     const fetchProductsInBox = async () => {
       if (!selectedBox) return;
@@ -130,7 +130,7 @@ const PackingPage = () => {
     }
   };
 
-  // 📦 Přidání produktu do krabice
+  // Přidání produktu do krabice
   const handleAddToBox = async () => {
     if (!selectedBox) {
       setMessage("Vyberte krabici!");
@@ -172,7 +172,7 @@ const PackingPage = () => {
     }
   };
 
-  // ✅ Dokončení operace
+  // Dokončení operace
   const handleCompleteOperation = async () => {
     try {
       await operationService.completeOperation(id);

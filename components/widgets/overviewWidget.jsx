@@ -1,3 +1,6 @@
+"use client";
+
+import React from "react";
 import { getDashboardOverview } from "services/dashboardService";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -12,21 +15,31 @@ import { useClient } from "context/clientContext";
 import { useTheme } from "@mui/material";
 
 const OverviewWidget = () => {
+  // Lokální stav pro přehledové statistiky
   const [overview, setOverview] = useState(null);
+
+  // Router pro navigaci
   const router = useRouter();
+
+  // Aktuálně vybraný klient z kontextu
   const { selectedClient } = useClient();
+
+  // Přístup k tématu (např. pro barvy)
   const theme = useTheme();
 
+  // Načtení dat při změně klienta
   useEffect(() => {
     getDashboardOverview({ clientId: selectedClient })
-      .then((data) => setOverview(data))
-      .catch((err) => console.error(err));
+      .then((data) => setOverview(data)) // Uložení načtených dat
+      .catch((err) => console.error(err)); // Chybové hlášení
   }, [selectedClient]);
 
+  // Zobrazit text při čekání na data
   if (!overview) {
     return <Typography>Načítám data...</Typography>;
   }
 
+  // Definice jednotlivých statistik (widgetů)
   const items = [
     {
       icon: <InventoryIcon color="primary" />,
@@ -42,7 +55,7 @@ const OverviewWidget = () => {
       icon: <WarningAmberIcon sx={{ color: "orange" }} />,
       label: "Produkty s blížící se expirací",
       value: overview.expiringSoonCount.count,
-      link: `/app/batches?search=${overview.expiringSoonCount.data}`,
+      link: `/app/batches?search=${overview.expiringSoonCount.data}`, // odkaz na detaily
     },
     {
       icon: <ArrowDownwardIcon sx={{ color: "red" }} />,
@@ -59,7 +72,9 @@ const OverviewWidget = () => {
     {
       icon: <ArrowUpwardIcon sx={{ color: "green" }} />,
       label: "Nejzásobenější produkt",
-      value: `${overview.mostStockedProduct?.name || 0} (${overview.mostStockedProduct?.amount || 0})`,
+      value: `${overview.mostStockedProduct?.name || 0} (${
+        overview.mostStockedProduct?.amount || 0
+      })`,
       link: `/app/products?search=${overview.mostStockedProduct?.name}`,
     },
   ];
@@ -67,12 +82,12 @@ const OverviewWidget = () => {
   return (
     <Box
       sx={{
-        overflow: "auto",
+        overflow: "auto", // posuvník při přetečení obsahu
         height: "90%",
         p: 2,
         display: "grid",
         gap: 1,
-        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", // adaptivní mřížka
         alignItems: "center",
       }}
     >
@@ -88,6 +103,7 @@ const OverviewWidget = () => {
             borderRadius: 2,
             boxShadow: 1,
             p: 1,
+            // Změna pozadí na hover pokud je položka klikací
             "&:hover": {
               backgroundColor: item.link
                 ? theme.palette.primary.main
@@ -95,6 +111,7 @@ const OverviewWidget = () => {
             },
             cursor: item.link ? "pointer" : "default",
           }}
+          // Kliknutí přesměruje na odpovídající stránku
           onClick={() => item.link && router.push(item.link)}
         >
           {item.icon}

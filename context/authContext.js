@@ -10,20 +10,20 @@ const AuthContext = createContext(null);
 
 // Provider obalující aplikaci – zajišťuje přihlášeného uživatele
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // přihlášený uživatel
-  const [initialLoading, setInitialLoading] = useState(true); // načítání při prvním mountu
+  const [user, setUser] = useState(null);
+  const [initialLoading, setInitialLoading] = useState(true);
   const router = useRouter();
 
   // Funkce pro načtení uživatele z backendu
   const fetchUser = async () => {
     try {
-      const response = await fetchCurrentUser(); // volá /auth/me/
+      const response = await fetchCurrentUser();
       setUser(response);
     } catch (error) {
-      setUser(null); // chyba při načítání → nastavíme null
-      router.push("/auth/login"); // přesměrování na login
+      setUser(null);
+      router.push("/auth/login");
     } finally {
-      setInitialLoading(false); // ukončíme stav načítání
+      setInitialLoading(false);
     }
   };
 

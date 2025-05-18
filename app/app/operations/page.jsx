@@ -19,17 +19,17 @@ const Operations = () => {
   const [columns, setColumns] = useState([]);
   const { setMessage } = useMessage();
 
-  // ✅ Použití useCallback pro zabránění zbytečnému renderování
+  // Použití useCallback pro zabránění zbytečnému renderování
   const fetchStatuses = useCallback(async () => {
     try {
       const response = await operationService.getStatuses();
-      setStatuses(response.data); // Odebráno `.data`, protože služba vrací přímo `response.data`
+      setStatuses(response.data);
     } catch (error) {
       setMessage(`Chyba při načítání statusů: ${error.message}`);
     }
   }, [setMessage]);
 
-  // ✅ Načítání statusů při prvním renderu
+  // Načítání statusů při prvním renderu
   useEffect(() => {
     fetchStatuses();
   }, []);

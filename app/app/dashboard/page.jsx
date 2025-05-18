@@ -19,13 +19,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { getUserWidgets, saveUserWidgets } from "services/dashboardService";
 
-import ActiveOperationsWidget from "components/widgets/ActiveOperationsWidget";
-import EfficiencyWidget from "components/widgets/EfficiencyWidget";
-import ExtendedStatsWidget from "components/widgets/ExtendedStatsWidget";
-import LowStockWidget from "components/widgets/LowStockWidget";
-import RecentActivityWidget from "components/widgets/RecentActivityWidget";
-import OverviewWidget from "components/widgets/OverviewWidget";
-import StatsWidget from "components/widgets/StatsWidget";
+import ActiveOperationsWidget from "components/widgets/activeOperationsWidget";
+import EfficiencyWidget from "components/widgets/efficiencyWidget";
+import ExtendedStatsWidget from "components/widgets/extendedStatsWidget";
+import LowStockWidget from "components/widgets/lowStockWidget";
+import RecentActivityWidget from "components/widgets/recentActivityWidget";
+import OverviewWidget from "components/widgets/overviewWidget";
+import StatsWidget from "components/widgets/statsWidget";
 import { useClient } from "context/clientContext";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);

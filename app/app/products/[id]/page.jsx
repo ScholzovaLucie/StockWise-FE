@@ -10,7 +10,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 const ProductDetail = () => {
   const { id } = useParams();
   const [clientId, setClientId] = useState(null);
-  const [selectFields, setSelectFields] = useState(null); // Výchozí hodnota null
+  const [selectFields, setSelectFields] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const fields = [
@@ -27,7 +27,7 @@ const ProductDetail = () => {
         if (clients.results) clients = clients.results;
         const options = clients.map((client) => ({
           id: client.id,
-          name: client.name, // Zde použij správné pole pro zobrazení názvu produktu
+          name: client.name,
         }));
 
         setClientId(data.client_id);

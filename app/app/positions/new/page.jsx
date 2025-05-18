@@ -17,7 +17,7 @@ const NewPosition = () => {
         if (warehosues.results) warehosues = warehosues.results;
         const options = warehosues.map((warehouse) => ({
           id: warehouse.id,
-          name: warehouse.name, // Zde použij správné pole pro zobrazení názvu produktu
+          name: warehouse.name,
         }));
 
         setSelectFields([

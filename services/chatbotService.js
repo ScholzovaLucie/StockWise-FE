@@ -8,12 +8,12 @@ const chatbotService = {
       formData.append("input_chat", message);
       formData.append("client", clientId);
       if (file) {
-        formData.append("file", file); // Přiložený soubor (např. Excel/CSV)
+        formData.append("file", file);
       }
 
       const response = await api.post("/chatbot", formData, {
         headers: {
-          "Content-Type": "multipart/form-data", // důležité pro soubory
+          "Content-Type": "multipart/form-data",
         },
       });
 

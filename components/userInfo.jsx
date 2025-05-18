@@ -7,7 +7,7 @@ import {
   MenuItem,
   useColorScheme,
 } from "@mui/material";
-import { useRouter } from "next/navigation"; // nebo použij react-router-dom, pokud jsi přešel na čistý React
+import { useRouter } from "next/navigation";
 import { logout } from "services/authService";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
@@ -32,7 +32,7 @@ function UserInfo({ user, mode, setMode }) {
 
   const handleLogout = () => {
     sessionStorage.removeItem("selectedClient");
-    logout(); // Zavolej službu pro odhlášení (např. API request)
+    logout();
   };
 
   return (

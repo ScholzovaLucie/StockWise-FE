@@ -18,7 +18,7 @@ export async function middleware(req) {
     pathname.startsWith("/auth/forgot-password") ||
     pathname.startsWith("/auth/reset-password") ||
     pathname.startsWith("/auth/registr") ||
-    pathname.startsWith("/auth/login/reset-password") || // zřejmě překlep v route
+    pathname.startsWith("/auth/login/reset-password") ||
     pathname.startsWith("/_next") || // statické soubory Next.js
     pathname.startsWith("/static") || // vlastní statické soubory
     /\.(.*)$/.test(pathname) // např. .css, .js, .ico, .png, ...
@@ -32,13 +32,17 @@ export async function middleware(req) {
   }
 
   // Ověření tokenu pomocí backendu – volání /auth/me/
-  return fetch("http://localhost:8000/api/auth/me/", {
-    /* "http://stockwise-backend:8000/api/auth/me/" */ method: "GET",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      withCredentials: true,
-    },
-  })
+  return fetch(
+    //"http://localhost:8000/api/auth/me/",
+    "http://stockwise-backend:8000/api/auth/me/",
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        withCredentials: true,
+      },
+    }
+  )
     .then((res) => {
       if (!res.ok) {
         // Token je neplatný nebo expirovaný → přesměrování

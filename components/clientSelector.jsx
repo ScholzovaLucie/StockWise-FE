@@ -24,7 +24,8 @@ export default function ClientSelector() {
     const loadData = async () => {
       try {
         const data = await clientService.getAll({ no_page: 1 });
-        setClients(data?.resluts || data); // Ošetření různých struktur odpovědi (tip: pravděpodobně překlep ve "resluts")
+        console.log(data);
+        setClients(Array.isArray(data?.results) ? data.results : data); // Ošetření různých struktur odpovědi (tip: pravděpodobně překlep ve "resluts")
       } catch (error) {
         setMessage("Error loading data: " + error.message); // Nastavení chybové zprávy
       } finally {
@@ -47,8 +48,15 @@ export default function ClientSelector() {
     >
       <InputLabel id="client-selector-label">Select Client</InputLabel>
       <Select
+        MenuProps={{ disablePortal: true }}
         labelId="client-selector-label"
-        value={selectedClient === null ? "all" : selectedClient} // Pokud není vybrán žádný klient, zobrazí "All"
+        value={
+          clients.length > 0
+            ? selectedClient === null
+              ? "all"
+              : selectedClient
+            : ""
+        } // Pokud není vybrán žádný klient, zobrazí "All"
         onChange={handleChange}
         label="Select Client"
       >

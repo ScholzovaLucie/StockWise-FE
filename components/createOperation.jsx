@@ -315,13 +315,13 @@ const OperationForm = ({ operationId = null }) => {
       {/* Seznam produktů */}
       <Typography variant="h6">Produkty</Typography>
       {products.map((product, index) => (
-        <>
-          <Grid container spacing={2} key={index}>
+        <React.Fragment key={index}>
+          <Grid container spacing={2}>
             <Grid item xs={4}>
               <TextField
                 select
                 label="Produkt"
-                value={product.productId || product.batch.product.id}
+                value={product.productId || product.batch?.product?.id || ""}
                 onChange={(e) => handleProductChange(index, e.target.value)}
                 fullWidth
                 disabled={!!operationId}
@@ -390,7 +390,7 @@ const OperationForm = ({ operationId = null }) => {
             </Grid>
           </Grid>
           <Divider style={{ margin: "5px 0" }} />
-        </>
+        </React.Fragment>
       ))}
 
       {/* Tlačítko přidání produktu */}

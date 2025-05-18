@@ -1,3 +1,6 @@
+"use client";
+
+import React from "react";
 import { getDashboardActiveOperations } from "services/dashboardService";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -5,36 +8,44 @@ import { Box, Paper, Typography } from "@mui/material";
 import { useClient } from "context/clientContext";
 import { useTheme } from "@mui/material";
 
-// 🏷 Funkce pro barevné označení stavů operací
+// Funkce vrací barvu podle stavu operace
 const getStatusColor = (status) => {
   switch (status) {
     case "COMPLETED":
-      return "#4caf50"; // Zelená
+      return "#4caf50"; // zelená pro dokončené
     case "BOX":
-      return "#ff9800"; // Oranžová
+      return "#ff9800"; // oranžová pro zabaleno
     case "CANCELLED":
-      return "#f44336"; // Červená
+      return "#f44336"; // červená pro zrušeno
     default:
-      return "#9e9e9e"; // Šedá
+      return "#9e9e9e"; // šedá pro ostatní stavy
   }
 };
 
 const ActiveOperationsWidget = () => {
+  // Získání aktuálně vybraného klienta z kontextu
   const { selectedClient } = useClient();
+
+  // Lokální stav pro seznam aktivních operací
   const [operations, setOperations] = useState([]);
+
+  // Pro navigaci mezi stránkami
   const router = useRouter();
+
+  // Pro získání tématu (např. barvy)
   const theme = useTheme();
 
+  // Načtení aktivních operací při změně klienta
   useEffect(() => {
     getDashboardActiveOperations({ clientId: selectedClient })
-      .then((data) => setOperations(data))
-      .catch((err) => console.error(err));
+      .then((data) => setOperations(data)) // úspěšné načtení
+      .catch((err) => console.error(err)); // chyba při načítání
   }, [selectedClient]);
 
   return (
     <Box
       sx={{
-        overflow: "auto",
+        overflow: "auto", // posuvník pokud je obsah větší než výška
         height: "90%",
         p: 2,
         display: "grid",
@@ -58,9 +69,10 @@ const ActiveOperationsWidget = () => {
               cursor: "pointer",
               "&:hover": { backgroundColor: theme.palette.primary.main },
             }}
+            // Po kliknutí přesměruje na detail operace podle čísla
             onClick={() => router.push(`/app/operations?search=${op.number}`)}
           >
-            {/* Info o operaci */}
+            {/* Informace o operaci */}
             <Box>
               <Typography variant="body2">
                 <strong>ID:</strong> {op.id}
@@ -73,7 +85,7 @@ const ActiveOperationsWidget = () => {
               </Typography>
             </Box>
 
-            {/* Indikátor stavu */}
+            {/* Barevný indikátor stavu operace */}
             <Box
               sx={{
                 width: 12,
@@ -85,6 +97,7 @@ const ActiveOperationsWidget = () => {
           </Box>
         ))
       ) : (
+        // Zobrazení hlášky, pokud nejsou žádné aktivní operace
         <Typography variant="body2" sx={{ textAlign: "center", color: "gray" }}>
           Žádné aktivní operace.
         </Typography>

@@ -8,7 +8,7 @@ const historyService = {
         `/history/`,
         { params },
         {
-          withCredentials: true, // zajištění přenosu cookies
+          withCredentials: true,
         }
       );
       return response.data;

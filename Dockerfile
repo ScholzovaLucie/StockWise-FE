@@ -16,5 +16,5 @@ COPY . .
 # Exponování portu 3000
 EXPOSE 3000
 
-# Spuštění aplikace
-CMD ["npm", "run", "dev"]
+# Spuštění aplikace s navýšeným heap limitem (4 GB)
+CMD ["node", "--max-old-space-size=4096", "node_modules/.bin/next", "dev"]

@@ -1,3 +1,6 @@
+"use client";
+
+import React from "react";
 import { getDashboardEfficiency } from "services/dashboardService";
 import { useEffect, useState } from "react";
 import {
@@ -10,39 +13,46 @@ import {
 import { useClient } from "context/clientContext";
 
 const EfficiencyWidget = () => {
+  // Lokální stav pro data o efektivitě
   const [efficiencyData, setEfficiencyData] = useState(null);
+
+  // Vybraný klient z globálního kontextu
   const { selectedClient } = useClient();
 
+  // Načtení dat o efektivitě při změně klienta
   useEffect(() => {
     getDashboardEfficiency({ clientId: selectedClient })
-      .then((data) => setEfficiencyData(data))
-      .catch((err) => console.error(err));
+      .then((data) => setEfficiencyData(data)) // Uložení získaných dat
+      .catch((err) => console.error(err)); // Logování chyby
   }, [selectedClient]);
 
+  // Zobrazit text při čekání na data
   if (!efficiencyData) {
     return <Typography>Načítám data...</Typography>;
   }
 
+  // Destrukturalizace dat z odpovědi
   const { efficiency, weeklyEfficiency, avgEfficiency } = efficiencyData;
 
-  // 🎨 Dynamické barvy podle efektivity
+  // Funkce pro určení barvy podle hodnoty efektivity
   const getColor = (value) => {
-    if (value < 50) return "#f44336"; // Červená (špatná efektivita)
-    if (value < 80) return "#ff9800"; // Žlutá (průměrná efektivita)
-    return "#4caf50"; // Zelená (dobrá efektivita)
+    if (value < 50) return "#f44336"; // Červená – nízká efektivita
+    if (value < 80) return "#ff9800"; // Oranžová – střední efektivita
+    return "#4caf50"; // Zelená – vysoká efektivita
   };
 
   return (
     <Paper sx={{ overflow: "auto", height: "80%", p: 3, textAlign: "center" }}>
-      {/* 🟢 Progress bar */}
+      {/* Kruh s aktuální efektivitou */}
       <Box sx={{ position: "relative", display: "inline-flex", mt: 2 }}>
         <CircularProgress
           variant="determinate"
-          value={efficiency}
+          value={efficiency} // procentuální hodnota
           size={100}
           thickness={5}
-          sx={{ color: getColor(efficiency) }}
+          sx={{ color: getColor(efficiency) }} // barva dle efektivity
         />
+        {/* Číslo uprostřed kruhu */}
         <Box
           sx={{
             position: "absolute",
@@ -61,9 +71,10 @@ const EfficiencyWidget = () => {
         </Box>
       </Box>
 
+      {/* Oddělení aktuálního stavu od statistik */}
       <Divider sx={{ my: 2 }} />
 
-      {/* 📊 Trendová statistika */}
+      {/* Statistiky za týden a průměrná efektivita */}
       <Typography variant="body2">
         Tento týden: <strong>{weeklyEfficiency.toFixed(1)}%</strong>
       </Typography>

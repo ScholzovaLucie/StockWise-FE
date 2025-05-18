@@ -11,8 +11,8 @@ import {
 } from "@mui/material";
 import { logout, fetchCurrentUser } from "services/authService";
 import clientService from "services/clientService";
-import userSrvices from "services/userSrvices";
-import { useRouter } from "next/navigation"; // Import routeru
+import userSrvices from "services/userService";
+import { useRouter } from "next/navigation";
 import { useMessage } from "context/messageContext";
 import { useClient } from "context/clientContext";
 
@@ -31,7 +31,7 @@ const UserProfile = () => {
 
   const handleLogout = () => {
     sessionStorage.removeItem("selectedClient");
-    logout(); // Zavolej službu pro odhlášení (např. API request)
+    logout();
   };
 
   useEffect(() => {

@@ -1,3 +1,6 @@
+"use client";
+
+import React from "react";
 import { getDashboardExtendedStats } from "services/dashboardService";
 import { useEffect, useState } from "react";
 import { Paper, Box, Typography } from "@mui/material";
@@ -14,7 +17,6 @@ import {
 } from "chart.js";
 import { useClient } from "context/clientContext";
 
-// 🔧 Registrace komponent pro Chart.js
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -26,36 +28,42 @@ ChartJS.register(
 );
 
 const ExtendedStatsWidget = () => {
+  // Stav pro uložená data o rozšířených statistikách
   const [extendedStats, setExtendedStats] = useState(null);
+
+  // Vybraný klient z kontextu
   const { selectedClient } = useClient();
 
+  // Načtení dat při změně klienta
   useEffect(() => {
     getDashboardExtendedStats({ clientId: selectedClient })
-      .then((data) => setExtendedStats(data))
-      .catch((err) => console.error(err));
+      .then((data) => setExtendedStats(data)) // úspěšné načtení dat
+      .catch((err) => console.error(err)); // logování chyby
   }, [selectedClient]);
 
+  // Zobrazí se text při čekání na data
   if (!extendedStats) {
     return <Typography>Načítám rozšířené statistiky...</Typography>;
   }
 
-  // 📆 Vygenerování seznamu všech unikátních dat
+  // Vygenerování seznamu všech unikátních dat
   const labels = [
     ...new Set(
       extendedStats.trend.map((item) => new Date(item.day).toLocaleDateString())
     ),
   ];
 
-  // 🎨 Barvy pro jednotlivé uživatele
+  // Barvy pro jednotlivé uživatele
   const colors = ["#42a5f5", "#66bb6a", "#ff7043", "#ab47bc", "#fbc02d"];
 
-  // 🏷 Seznam uživatelů
+  // Extrakce všech unikátních uživatelů ze statistik
   const users = [
     ...new Set(extendedStats.trend.map((item) => item.user__name)),
   ];
 
-  // 📊 Data pro graf
+  // Generování datasetů pro každý uživatelský graf
   const datasets = users.map((user, index) => {
+    // Pro každé datum najdi počet operací daného uživatele
     const dataPoints = labels.map((date) => {
       const item = extendedStats.trend.find(
         (entry) =>
@@ -65,6 +73,7 @@ const ExtendedStatsWidget = () => {
       return item ? item.count : 0;
     });
 
+    // Dataset pro daného uživatele
     return {
       label: user,
       data: dataPoints,
@@ -89,10 +98,13 @@ const ExtendedStatsWidget = () => {
         textAlign: "center",
       }}
     >
+      {/* Zobrazení průměrné doby dokončení operace */}
       <Typography variant="body1" gutterBottom sx={{ m: 1 }}>
         Průměrná doba dokončení: {extendedStats.avgCompletionTime.toFixed(2)}{" "}
         minut
       </Typography>
+
+      {/* Vykreslení čárového grafu */}
       <Line sx={{ m: 1 }} data={chartData} options={{ responsive: true }} />
     </Paper>
   );
