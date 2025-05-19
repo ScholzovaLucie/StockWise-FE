@@ -33,8 +33,8 @@ export async function middleware(req) {
 
   // Ověření tokenu pomocí backendu – volání /auth/me/
   return fetch(
-    //"http://localhost:8000/api/auth/me/",
-    "http://stockwise-backend:8000/api/auth/me/",
+    "http://localhost:8000/api/auth/me/",
+    //"http://stockwise-backend:8000/api/auth/me/",
     {
       method: "GET",
       headers: {

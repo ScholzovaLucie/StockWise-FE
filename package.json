@@ -48,7 +48,12 @@
       "@testing-library/jest-dom"
     ],
     "transform": {
-      "^.+\\.[jt]sx?$": "babel-jest"
+      "^.+\\.[jt]sx?$": [
+        "babel-jest",
+        {
+          "configFile": "./babel.config.test.js"
+        }
+      ]
     },
     "transformIgnorePatterns": [
       "/node_modules/(?!react-markdown)/"
