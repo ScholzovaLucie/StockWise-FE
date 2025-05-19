@@ -48,3 +48,7 @@ Whitelistované cesty (bez ověření):
 ```bash
 npm run test
 ```
+
+## 🧪 Testovací přihlášení
+- email: admin@admin.cz
+- heslo: Heslo1+
