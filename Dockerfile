@@ -2,7 +2,7 @@
 FROM node:18-alpine
 
 # Nastavení pracovního adresáře v kontejneru
-WORKDIR /pages
+WORKDIR /app
 
 # Kopírování package.json a package-lock.json
 COPY package.json package-lock.json ./
